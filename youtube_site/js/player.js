@@ -1,43 +1,43 @@
-let allVideos = [];
-let loopActive = true;
+let data = [];
 
-async function loadAllCSVs() {
-  const csvFiles = ['setlists/rock.csv', 'setlists/chill.csv', 'setlists/classic.csv'];
-
-  for (const file of csvFiles) {
-    const res = await fetch(file);
-    const text = await res.text();
-    const rows = text.trim().split('\n').slice(1);
-    rows.forEach(row => {
-      const [title, url, artist, mood, seconds] = row.split(',');
-      allVideos.push({ title, url, artist, mood, seconds: parseInt(seconds) });
+fetch("setlist.csv")
+  .then(res => res.text())
+  .then(text => {
+    const rows = text.trim().split("\n").slice(1); // ヘッダー除外
+    data = rows.map(row => {
+      const [title, date, url, song, artist, start, duration, note] = row.split(",");
+      return {
+        title,
+        date,
+        url,
+        song,
+        artist,
+        start: parseInt(start),
+        duration: parseInt(duration),
+        note
+      };
     });
-  }
-
-  playRandom();
-}
+    playRandom();
+  });
 
 function playRandom() {
-  if (!loopActive) return;
+  const video = data[Math.floor(Math.random() * data.length)];
+  const videoId = extractVideoId(video.url);
+  const endTime = video.start + video.duration;
 
-  const video = allVideos[Math.floor(Math.random() * allVideos.length)];
-  const videoId = video.url.split('v=')[1]?.split('&')[0];
-  const start = video.url.includes('t=') ? '' : '';
-  const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+  document.getElementById("title").textContent = video.title;
+  document.getElementById("date").textContent = video.date;
+  document.getElementById("song").textContent = video.song;
+  document.getElementById("artist").textContent = video.artist;
+  document.getElementById("start").textContent = video.start;
+  document.getElementById("duration").textContent = video.duration;
+  document.getElementById("note").textContent = video.note;
 
-  const container = document.getElementById('video-container');
-  container.innerHTML = `
-    <h2>${video.title} (${video.artist})</h2>
-    <iframe width="560" height="315" src="${embedUrl}" frameborder="0" allowfullscreen></iframe>
-  `;
-
-  setTimeout(() => {
-    if (loopActive) playRandom();
-  }, (video.seconds || 30) * 1000); // デフォ30秒
+  const embedUrl = `https://www.youtube.com/embed/${videoId}?start=${video.start}&end=${endTime}&autoplay=1`;
+  document.getElementById("player").src = embedUrl;
 }
 
-function stopLoop() {
-  loopActive = false;
+function extractVideoId(url) {
+  const match = url.match(/[?&]v=([^&]+)/) || url.match(/youtu\.be\/([^?&]+)/);
+  return match ? match[1] : "";
 }
-
-window.onload = loadAllCSVs;

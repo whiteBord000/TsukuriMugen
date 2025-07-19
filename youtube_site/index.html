@@ -1,14 +1,17 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>ランダム再生</title>
-  <script src="js/player.js" defer></script>
-</head>
 <body>
-  <h1>ランダム再生</h1>
-  <p>再生後、自動で次の動画に切り替わります。</p>
-  <div id="video-container"></div>
-  <button onclick="stopLoop()">終了</button>
+  <h1>ランダム再生プレイヤー</h1>
+  <div id="info">
+    <p><strong>動画タイトル:</strong> <span id="title"></span></p>
+    <p><strong>配信日:</strong> <span id="date"></span></p>
+    <p><strong>曲名:</strong> <span id="song"></span></p>
+    <p><strong>アーティスト:</strong> <span id="artist"></span></p>
+    <p><strong>開始時間:</strong> <span id="start"></span> 秒</p>
+    <p><strong>再生秒数:</strong> <span id="duration"></span> 秒</p>
+    <p><strong>備考:</strong> <span id="note"></span></p>
+  </div>
+
+  <iframe id="player" width="560" height="315" src="" frameborder="0" allowfullscreen></iframe>
+  <button onclick="playRandom()">次の動画へ</button>
+
+  <script src="main.js"></script>
 </body>
-</html>
