@@ -36,7 +36,7 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 function fetchAndShowCSV(csvFileName, title) {
-  fetch("CSV/" + csvFileName)
+  fetch("csv/" + csvFileName)
     .then(response => response.text())
     .then(csvText => {
       const rows = csvText.trim().split("\n").map(row => row.split(","));
