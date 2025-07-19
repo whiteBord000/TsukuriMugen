@@ -5,7 +5,7 @@ const setlists = [
     "title": "〖 歌枠 〗あたしのことが知りたいなら歌を聴け 〖 眠雲ツクリ / ミリプロ 〗",
     "videoUrl": "https://www.youtube.com/live/ceAlqDW8CwE?si=zNoCx61k7ZfBrm5f",
     "thumbnail": "https://www.youtube.com/live/ceAlqDW8CwE?si=zNoCx61k7ZfBrm5f/hqdefault.jpg",
-    "csv": "20250520.csv"
+    "csv": "csv/20250520.csv"
   }
 ]
 ];
