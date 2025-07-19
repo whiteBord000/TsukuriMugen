@@ -5,7 +5,7 @@ const setlists = [
     "title": "〖 歌枠 〗あたしのことが知りたいなら歌を聴け 〖 眠雲ツクリ / ミリプロ 〗",
     "videoUrl": "https://www.youtube.com/live/ceAlqDW8CwE?si=zNoCx61k7ZfBrm5f",
     "thumbnail": "https://www.youtube.com/live/ceAlqDW8CwE?si=zNoCx61k7ZfBrm5f/hqdefault.jpg",
-    "csv": "csv/20250520.csv"
+    "csv": "20250520.csv"
   }
 ]
 ];
@@ -35,13 +35,14 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-function fetchAndShowCSV(csvPath, title) {
-  fetch(csvPath)
+function fetchAndShowCSV(csvFileName, title) {
+  fetch("CSV/" + csvFileName)
     .then(response => response.text())
     .then(csvText => {
       const rows = csvText.trim().split("\n").map(row => row.split(","));
       const table = document.createElement("table");
 
+      // ヘッダー行
       const header = table.insertRow();
       rows[0].forEach(col => {
         const th = document.createElement("th");
@@ -49,6 +50,7 @@ function fetchAndShowCSV(csvPath, title) {
         header.appendChild(th);
       });
 
+      // データ行
       rows.slice(1).forEach(cols => {
         const tr = table.insertRow();
         cols.forEach(col => {
@@ -64,8 +66,9 @@ function fetchAndShowCSV(csvPath, title) {
       content.appendChild(table);
       popup.style.display = "block";
     })
-    .catch(err => alert("CSV読み込みエラー: " + err));
+    .catch(err => alert("CSV読み込みエラー：" + err));
 }
+
 
 function closePopup() {
   document.getElementById("popup").style.display = "none";
