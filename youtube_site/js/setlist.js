@@ -1,16 +1,13 @@
 const setlists = [
+ [
   {
-    title: "2025年7月10日 夏ライブ",
-    thumbnail: "https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg",
-    videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-    csv: "csv/20250710.csv"
-  },
-  {
-    title: "2025年6月1日 配信祭",
-    thumbnail: "https://img.youtube.com/vi/xvFZjo5PgG0/0.jpg",
-    videoUrl: "https://www.youtube.com/watch?v=xvFZjo5PgG0",
-    csv: "csv/20250601.csv"
+    "id": "setlist_2025_05_20",
+    "title": "〖 歌枠 〗あたしのことが知りたいなら歌を聴け 〖 眠雲ツクリ / ミリプロ 〗",
+    "videoUrl": "https://www.youtube.com/live/ceAlqDW8CwE?si=zNoCx61k7ZfBrm5f",
+    "thumbnail": "https://www.youtube.com/live/ceAlqDW8CwE?si=zNoCx61k7ZfBrm5f/hqdefault.jpg",
+    "csv": "20250520.csv"
   }
+]
 ];
 
 let lastClicked = null;
