@@ -1,7 +1,7 @@
 let data = [];
 let autoNextTimer = null;
 
-fetch("csv/20250520.csv")  // ★csvの場所を正確に指定（パス重要）
+fetch("csv/20250520.csv")  // 必ずパスは合ってるか確認！
   .then(res => res.text())
   .then(text => {
     const rows = text.trim().split("\n").slice(1); // ヘッダー除外
@@ -18,19 +18,18 @@ fetch("csv/20250520.csv")  // ★csvの場所を正確に指定（パス重要�
         note
       };
     });
-    playRandom();  // 初回実行
+    playRandom();  // 初回再生
   });
 
 function playRandom() {
-  // タイマーが動いてたらキャンセル
-  if (autoNextTimer) {
-    clearTimeout(autoNextTimer);
-  }
+  // 前回のタイマーをキャンセル
+  if (autoNextTimer) clearTimeout(autoNextTimer);
 
   const video = data[Math.floor(Math.random() * data.length)];
   const videoId = extractVideoId(video.url);
   const endTime = video.start + video.duration;
 
+  // 情報表示
   document.getElementById("title").textContent = video.title;
   document.getElementById("date").textContent = video.date;
   document.getElementById("song").textContent = video.song;
@@ -39,18 +38,20 @@ function playRandom() {
   document.getElementById("duration").textContent = video.duration;
   document.getElementById("note").textContent = video.note;
 
+  // 再生URL設定
   const embedUrl = `https://www.youtube.com/embed/${videoId}?start=${video.start}&end=${endTime}&autoplay=1`;
   document.getElementById("player").src = embedUrl;
 
-  // duration 秒後に次の動画へ自動切替
+  // 次の動画を duration 秒後に再生
   autoNextTimer = setTimeout(() => {
     playRandom();
-  }, video.duration * 1000);  // ミリ秒に変換
+  }, video.duration * 1000); // 秒 → ミリ秒
 }
 
 function extractVideoId(url) {
-  const match = url.match(/[?&]v=([^&]+)/) ||
-                url.match(/youtu\.be\/([^?&]+)/) ||
-                url.match(/\/live\/([^?&]+)/);
+  const match =
+    url.match(/[?&]v=([^&]+)/) ||
+    url.match(/youtu\.be\/([^?&]+)/) ||
+    url.match(/\/live\/([^?&]+)/);
   return match ? match[1] : "";
 }
