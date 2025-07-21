@@ -38,6 +38,9 @@ function playRandom() {
 }
 
 function extractVideoId(url) {
-  const match = url.match(/[?&]v=([^&]+)/) || url.match(/youtu\.be\/([^?&]+)/);
+  // 通常形式 (v=xxxxxxx)、短縮URL (youtu.be/xxxxx)、ライブ形式 (/live/xxxxx)
+  const match = url.match(/[?&]v=([^&]+)/) ||
+                url.match(/youtu\.be\/([^?&]+)/) ||
+                url.match(/\/live\/([^?&]+)/);
   return match ? match[1] : "";
 }
