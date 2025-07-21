@@ -34,27 +34,34 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 function fetchAndShowCSV(csvFileName, title) {
-  fetch("csv/" + csvFileName)
+  fetch("CSV/" + csvFileName)
     .then(response => response.text())
     .then(csvText => {
       const rows = csvText.trim().split("\n").map(row => row.split(","));
       const table = document.createElement("table");
 
+      // 表示したくない列のインデックス（例：0=title, 1=date, 2=url）
+      const excludeCols = [0, 1, 2];
+
       // ヘッダー行
       const header = table.insertRow();
-      rows[0].forEach(col => {
-        const th = document.createElement("th");
-        th.textContent = col;
-        header.appendChild(th);
+      rows[0].forEach((col, i) => {
+        if (!excludeCols.includes(i)) {
+          const th = document.createElement("th");
+          th.textContent = col;
+          header.appendChild(th);
+        }
       });
 
       // データ行
       rows.slice(1).forEach(cols => {
         const tr = table.insertRow();
-        cols.forEach(col => {
-          const td = document.createElement("td");
-          td.textContent = col;
-          tr.appendChild(td);
+        cols.forEach((col, i) => {
+          if (!excludeCols.includes(i)) {
+            const td = document.createElement("td");
+            td.textContent = col;
+            tr.appendChild(td);
+          }
         });
       });
 
@@ -66,6 +73,7 @@ function fetchAndShowCSV(csvFileName, title) {
     })
     .catch(err => alert("CSV読み込みエラー：" + err));
 }
+
 
 
 function closePopup() {
