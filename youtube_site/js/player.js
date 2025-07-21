@@ -21,12 +21,24 @@ fetch("csv/All_Music.csv") // 再生する曲のリストを設定
     playRandom();  // 初回再生
   });
 
-function playRandom() {
-  // 前回のタイマーをキャンセル
+function playRandom(retryCount = 0) {
   if (autoNextTimer) clearTimeout(autoNextTimer);
+
+  const MAX_RETRIES = 10;
 
   const video = data[Math.floor(Math.random() * data.length)];
   const videoId = extractVideoId(video.url);
+
+  // 無効な動画ID or 明らかに無効な長さのときスキップ
+  if (!videoId || videoId.length !== 11) {
+    if (retryCount < MAX_RETRIES) {
+      playRandom(retryCount + 1); // 再試行
+    } else {
+      alert("有効な動画が見つかりませんでした。");
+    }
+    return;
+  }
+
   const endTime = video.start + video.duration;
 
   // 情報表示
@@ -45,8 +57,9 @@ function playRandom() {
   // 次の動画を duration 秒後に再生
   autoNextTimer = setTimeout(() => {
     playRandom();
-  }, video.duration * 1000); // 秒 → ミリ秒
+  }, video.duration * 1000);
 }
+
 
 function extractVideoId(url) {
   const match =
