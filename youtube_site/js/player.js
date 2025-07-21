@@ -1,6 +1,6 @@
 let data = [];
 
-fetch("csv/setlist.csv")
+fetch("csv/20250520.csv")
   .then(res => res.text())
   .then(text => {
     const rows = text.trim().split("\n").slice(1); // ヘッダー除外
