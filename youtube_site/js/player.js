@@ -1,7 +1,7 @@
 let data = [];
 let autoNextTimer = null;
 
-fetch("csv/20250520.csv")  // 必ずパスは合ってるか確認！
+fetch("csv/All_Music.csv") // 再生する曲のリストを設定
   .then(res => res.text())
   .then(text => {
     const rows = text.trim().split("\n").slice(1); // ヘッダー除外
