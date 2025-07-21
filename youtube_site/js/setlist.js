@@ -40,8 +40,8 @@ function fetchAndShowCSV(csvFileName, title) {
       const rows = csvText.trim().split("\n").map(row => row.split(","));
       const table = document.createElement("table");
 
-      // 表示したくない列のインデックス（例：0=title, 1=date, 2=url）
-      const excludeCols = [0, 1, 2];
+      // 表示したくない列のインデックス（例：0=title, 1=date, 2=url, 5=artist, 6=duration）
+      const excludeCols = [0, 1, 2, 5, 6];
 
       // ヘッダー行
       const header = table.insertRow();
