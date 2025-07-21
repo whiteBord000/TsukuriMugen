@@ -10,7 +10,7 @@ const setlists = [
     "id": "setlist_2025_05_30",
     "title": "〖 縦型歌枠 〗この歌枠は縦型なんだ 〖 眠雲ツクリ / ミリプロ 〗",
     "videoUrl": "https://www.youtube.com/live/AJzuJ1BQGFk?si=_JlworqvnhMFmR8Q",
-    "thumbnail": "https://img.youtube.com/vi/AJzuJ1BQGFk?si=_JlworqvnhMFmR8Q",
+    "thumbnail": "https://img.youtube.com/vi/AJzuJ1BQGFk?JlworqvnhMFmR8Q",
     "csv": "20250530.csv"
   }
 ];
