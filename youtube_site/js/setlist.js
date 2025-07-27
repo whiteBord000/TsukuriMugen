@@ -86,9 +86,15 @@ function fetchAndShowCSV(csvFileName, title) {
       const thumbnailImg = document.createElement("img");
       thumbnailImg.src = currentSet.thumbnail;
       thumbnailImg.alt = currentSet.title;
-      thumbnailImg.style.maxWidth = "300px";
-      thumbnailImg.style.display = "block";
-      thumbnailImg.style.marginBottom = "20px";
+      const thumb = document.createElement("img");
+      thumb.src = setlists.find(s => s.csv === csvFileName)?.thumbnail;
+      thumb.className = "popup-thumbnail";
+      thumb.alt = title;
+      thumb.addEventListener("click", () => {
+        window.open(setlists.find(s => s.csv === csvFileName)?.videoUrl, "_blank");
+      });
+      content.appendChild(thumb);
+
 
       thumbnailLink.appendChild(thumbnailImg);
 
