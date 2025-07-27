@@ -77,31 +77,20 @@ function fetchAndShowCSV(csvFileName, title) {
 
       const popup = document.getElementById("popup");
       const content = document.getElementById("popup-content");
+      content.innerHTML = `<h2>${title}</h2>`;
 
       // サムネイルをクリック可能なリンクで表示
-      const thumbnailLink = document.createElement("a");
-      thumbnailLink.href = currentSet.videoUrl;
-      thumbnailLink.target = "_blank";
-
-      const thumbnailImg = document.createElement("img");
-      thumbnailImg.src = currentSet.thumbnail;
-      thumbnailImg.alt = currentSet.title;
       const thumb = document.createElement("img");
-      thumb.src = setlists.find(s => s.csv === csvFileName)?.thumbnail;
+      thumb.src = currentSet.thumbnail;
       thumb.className = "popup-thumbnail";
       thumb.alt = title;
       thumb.addEventListener("click", () => {
-        window.open(setlists.find(s => s.csv === csvFileName)?.videoUrl, "_blank");
+        window.open(currentSet.videoUrl, "_blank");
       });
       content.appendChild(thumb);
 
-
-      thumbnailLink.appendChild(thumbnailImg);
-
-      content.innerHTML = `<h2>${title}</h2>`;
-      content.appendChild(thumbnailLink);
+      // セットリスト表
       content.appendChild(table);
-
       popup.style.display = "block";
     })
     .catch(err => alert("CSV読み込みエラー：" + err));
