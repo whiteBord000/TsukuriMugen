@@ -41,6 +41,9 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 function fetchAndShowCSV(csvFileName, title) {
+  // CSVファイル名から該当セットリストオブジェクトを取得
+  const currentSet = setlists.find(s => s.csv === csvFileName);
+
   fetch("csv/" + csvFileName)
     .then(response => response.text())
     .then(csvText => {
@@ -74,8 +77,25 @@ function fetchAndShowCSV(csvFileName, title) {
 
       const popup = document.getElementById("popup");
       const content = document.getElementById("popup-content");
+
+      // サムネイルをクリック可能なリンクで表示
+      const thumbnailLink = document.createElement("a");
+      thumbnailLink.href = currentSet.videoUrl;
+      thumbnailLink.target = "_blank";
+
+      const thumbnailImg = document.createElement("img");
+      thumbnailImg.src = currentSet.thumbnail;
+      thumbnailImg.alt = currentSet.title;
+      thumbnailImg.style.maxWidth = "300px";
+      thumbnailImg.style.display = "block";
+      thumbnailImg.style.marginBottom = "20px";
+
+      thumbnailLink.appendChild(thumbnailImg);
+
       content.innerHTML = `<h2>${title}</h2>`;
+      content.appendChild(thumbnailLink);
       content.appendChild(table);
+
       popup.style.display = "block";
     })
     .catch(err => alert("CSV読み込みエラー：" + err));
