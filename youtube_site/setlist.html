@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
   <meta charset="UTF-8">
   <title>配信セットリスト</title>
@@ -7,9 +8,12 @@
   <style>
     .thumbnail {
       width: 200px;
+      height: 112px;
+      object-fit: cover;
       margin: 10px;
       cursor: pointer;
     }
+
     .popup {
       position: fixed;
       top: 10%;
@@ -23,16 +27,20 @@
       display: none;
       z-index: 10;
     }
+
     .popup table {
       width: 100%;
       border-collapse: collapse;
     }
-    .popup th, .popup td {
+
+    .popup th,
+    .popup td {
       border: 1px solid #aaa;
       padding: 8px;
     }
   </style>
 </head>
+
 <body>
   <nav style="margin-bottom: 20px;">
     <button onclick="location.href='index.html'">本サイト運営指針・注意事項</button>
@@ -48,4 +56,5 @@
     <div id="popup-content"></div>
   </div>
 </body>
+
 </html>
