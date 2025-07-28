@@ -12,7 +12,78 @@ const setlists = [
     "videoUrl": "https://www.youtube.com/live/AJzuJ1BQGFk?si=_JlworqvnhMFmR8Q",
     "thumbnail": "https://img.youtube.com/vi/AJzuJ1BQGFk/hqdefault.jpg",
     "csv": "20250530.csv"
+  },
+  {
+    "id": "setlist_2025_06_03",
+    "title": "〖 歌枠 〗高評価800いくまで終われま8→2222いってもうた 〖 眠雲ツクリ / ミリプロ 〗",
+    "videoUrl": "https://www.youtube.com/live/AjiIhR7vnvs?si=7SOrfLmXZ7KjKDAA",
+    "thumbnail": "https://img.youtube.com/vi/AjiIhR7vnvs/hqdefault.jpg",
+    "csv": "20250603.csv"
+  },
+  {
+    "id": "setlist_2025_06_06_a",
+    "title": "〖 歌枠 〗登録者５万人行くまで終われま5 〖 眠雲ツクリ / ミリプロ 〗",
+    "videoUrl": "https://www.youtube.com/live/u4xILjkPxsk?si=ODVBx_qwHltGHNIB",
+    "thumbnail": "https://img.youtube.com/vi/u4xILjkPxsk/hqdefault.jpg",
+    "csv": "20250606a.csv"
+  },
+  {
+    "id": "setlist_2025_06_06_b",
+    "title": "〖 歌枠 〗収益化ありがとうFOREVER 〖 眠雲ツクリ / ミリプロ 〗",
+    "videoUrl": "https://www.youtube.com/live/VU-9c7e7F1Y?si=3FOrcNtSHadVqIPA",
+    "thumbnail": "https://img.youtube.com/vi/VU-9c7e7F1Y/hqdefault.jpg",
+    "csv": "20250606b.csv"
+  },
+  {
+    "id": "setlist_2025_06_19",
+    "title": "〖 歌枠 〗ちょこっとだけ歌うなどしたりだとか 〖 眠雲ツクリ / ミリプロ 〗",
+    "videoUrl": "https://www.youtube.com/live/A7j3NpJ0vzI?si=54dUT2O9rojM6ipl",
+    "thumbnail": "https://img.youtube.com/vi/A7j3NpJ0vzI/hqdefault.jpg",
+    "csv": "20250619.csv"
+  },
+  {
+    "id": "setlist_2025_06_25",
+    "title": "〖 歌枠 〗げりら・げりら・げりら 〖 眠雲ツクリ / ミリプロ 〗",
+    "videoUrl": "https://www.youtube.com/live/yz_8qLw4Z7A?si=c41IhHBwLojof49Q",
+    "thumbnail": "https://img.youtube.com/vi/yz_8qLw4Z7A/hqdefault.jpg",
+    "csv": "20250625.csv"
+  },
+  {
+    "id": "setlist_2025_06_30",
+    "title": "〖 歌枠 〗とても素敵な 〖 眠雲ツクリ / ミリプロ 〗",
+    "videoUrl": "https://www.youtube.com/live/OsAowO2rwX8?si=vq81g_u-JTCadr8u",
+    "thumbnail": "https://img.youtube.com/vi/OsAowO2rwX8/hqdefault.jpg",
+    "csv": "20250630.csv"
+  },
+  {
+    "id": "setlist_2025_07_12",
+    "title": "〖 歌枠 〗乗れる波は乗れってばっちゃんが言ってた 〖 眠雲ツクリ / ミリプロ 〗",
+    "videoUrl": "https://www.youtube.com/live/sZrGuETYpWY?si=Hm_fSu1WqTCIQDC9",
+    "thumbnail": "https://img.youtube.com/vi/sZrGuETYpWY/hqdefault.jpg",
+    "csv": "20250712.csv"
+  },
+  {
+    "id": "setlist_2025_07_16",
+    "title": "〖 歌枠 〗 週の真ん中なので歌う〖 眠雲ツクリ / ミリプロ 〗",
+    "videoUrl": "https://www.youtube.com/live/7qIRHYVAG84?si=8OmzntD7AgNxheE5",
+    "thumbnail": "https://img.youtube.com/vi/7qIRHYVAG84/hqdefault.jpg",
+    "csv": "20250716.csv"
+  },
+  {
+    "id": "setlist_2025_07_27",
+    "title": "【眠雲ツクリ】最高のバトンを受け取りました。ラストかますぞ【 #ミリプロ20万人耐久歌枠リレー 】",
+    "videoUrl": "https://www.youtube.com/live/NgFZN0VrJDQ?si=E0HTaBtqE88BUP5c",
+    "thumbnail": "https://img.youtube.com/vi/NgFZN0VrJDQ/hqdefault.jpg",
+    "csv": "20250727.csv"
   }
+  // {
+  //   "id": "",
+  //   "title": "",
+  //   "videoUrl": "",
+  //   "thumbnail": "https://img.youtube.com/vi//hqdefault.jpg",
+  //   "csv": ""
+  // }
+
 ];
 
 let lastClicked = null;
