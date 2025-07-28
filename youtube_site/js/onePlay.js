@@ -1,13 +1,34 @@
-const CSV_FILE = "csv/20250520.csv";
-
 let currentIndex = 0;
 let songList = [];
 let playTimer = null;
+let csvFiles = [
+  { name: "2025/05/20 配信", file: "csv/20250520.csv" },
+  { name: "2025/05/30 配信", file: "csv/20250530.csv" },
+  { name: "2025/06/03 配信", file: "csv/20250603.csv" }
+];
 
 window.addEventListener("DOMContentLoaded", () => {
-  fetch(CSV_FILE)
+  const selector = document.getElementById("csv-selector");
+  csvFiles.forEach(csv => {
+    const option = document.createElement("option");
+    option.value = csv.file;
+    option.textContent = csv.name;
+    selector.appendChild(option);
+  });
+
+  selector.addEventListener("change", () => {
+    loadCsv(selector.value);
+  });
+
+  // 初期ロード
+  loadCsv(csvFiles[0].file);
+});
+
+function loadCsv(file) {
+  fetch(file)
     .then(response => response.text())
     .then(csvText => {
+      currentIndex = 0;
       const rows = csvText.trim().split("\n").slice(1); // ヘッダー除外
       songList = rows.map(line => {
         const [title, date, url, song, artist, start, duration, note] = line.split(",");
@@ -18,7 +39,7 @@ window.addEventListener("DOMContentLoaded", () => {
       playSong(currentIndex);
     })
     .catch(err => console.error("CSV読み込みエラー:", err));
-});
+}
 
 function extractVideoId(url) {
   const match = url.match(/(?:\/|v=)([A-Za-z0-9_-]{11})/);
