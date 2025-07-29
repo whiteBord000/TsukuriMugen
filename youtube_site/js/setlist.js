@@ -156,18 +156,17 @@ function fetchAndShowCSV(csvFileName, title) {
       thumb.className = "popup-thumbnail";
       thumb.alt = title;
       thumb.addEventListener("click", () => {
-        window.open(currentSet.videoUrl, "_blank");
+        // 遷移先を 0 秒開始にする
+        const zeroStartUrl = currentSet.videoUrl.replace(/(\?.*)?$/, "") + "?t=0";
+        window.open(zeroStartUrl, "_blank");
       });
       content.appendChild(thumb);
-
       // セットリスト表
       content.appendChild(table);
       popup.style.display = "block";
     })
     .catch(err => alert("CSV読み込みエラー：" + err));
 }
-
-
 
 function closePopup() {
   document.getElementById("popup").style.display = "none";

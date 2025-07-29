@@ -4,7 +4,9 @@ let playTimer = null;
 let csvFiles = [
   { name: "2025/05/20 配信", file: "csv/20250520.csv" },
   { name: "2025/05/30 配信", file: "csv/20250530.csv" },
-  { name: "2025/06/03 配信", file: "csv/20250603.csv" }
+  { name: "2025/06/03 配信", file: "csv/20250603.csv" },
+  { name: "2025/06/06a 配信", file: "csv/20250606a.csv" },
+  { name: "2025/06/06b 配信", file: "csv/20250606b.csv" }
 ];
 
 window.addEventListener("DOMContentLoaded", () => {
