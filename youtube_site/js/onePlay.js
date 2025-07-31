@@ -1,32 +1,46 @@
 let currentIndex = 0;
 let songList = [];
 let playTimer = null;
+
 let csvFiles = [
-  { name: "2025/05/20 配信", file: "csv/20250520.csv" },
-  { name: "2025/05/30 配信", file: "csv/20250530.csv" },
-  { name: "2025/06/03 配信", file: "csv/20250603.csv" },
-  { name: "2025/06/06a 配信", file: "csv/20250606a.csv" },
-  { name: "2025/06/06b 配信", file: "csv/20250606b.csv" },
-  { name: "2025/06/19 配信", file: "csv/20250619.csv" },
-  { name: "2025/06/25 配信", file: "csv/20250625.csv" },
-  { name: "2025/07/27 配信", file: "csv/20250727.csv" }
+  { file: "csv/20250520.csv" },
+  { file: "csv/20250530.csv" },
+  { file: "csv/20250603.csv" },
+  { file: "csv/20250606a.csv" },
+  { file: "csv/20250606b.csv" },
+  { file: "csv/20250619.csv" },
+  { file: "csv/20250625.csv" },
+  { file: "csv/20250727.csv" }
 ];
 
 window.addEventListener("DOMContentLoaded", () => {
   const selector = document.getElementById("csv-selector");
-  csvFiles.forEach(csv => {
-    const option = document.createElement("option");
-    option.value = csv.file;
-    option.textContent = csv.name;
-    selector.appendChild(option);
+
+  // 各CSVからタイトル取得してプルダウン作成
+  Promise.all(csvFiles.map(fileObj =>
+    fetch(fileObj.file)
+      .then(res => res.text())
+      .then(csvText => {
+        const firstLine = csvText.trim().split("\n")[1]; // ヘッダーの次の行（1曲目）
+        const [title] = firstLine.split(",");
+        const displayTitle = title.replace(/【.*?】/g, ""); // 【】内を除去
+        return { file: fileObj.file, title: displayTitle.trim() };
+      })
+  )).then(filesWithTitles => {
+    filesWithTitles.forEach(csv => {
+      const option = document.createElement("option");
+      option.value = csv.file;
+      option.textContent = csv.title;
+      selector.appendChild(option);
+    });
+
+    // 初期ロード
+    loadCsv(filesWithTitles[0].file);
   });
 
   selector.addEventListener("change", () => {
     loadCsv(selector.value);
   });
-
-  // 初期ロード
-  loadCsv(csvFiles[0].file);
 });
 
 function loadCsv(file) {
