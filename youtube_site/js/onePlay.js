@@ -23,8 +23,9 @@ window.addEventListener("DOMContentLoaded", () => {
       .then(csvText => {
         const firstLine = csvText.trim().split("\n")[1]; // ヘッダーの次の行（1曲目）
         const [title] = firstLine.split(",");
-        const displayTitle = title.replace(/【.*?】/g, ""); // 【】内を除去
-        return { file: fileObj.file, title: displayTitle.trim() };
+        const displayTitle1 = title.replace(/【.*?】/g, ""); // 【】内を除去
+        const displayTitle2 = displayTitle1.replace(/〖.*?〗/g, ""); // 【】内を除去
+        return { file: fileObj.file, title: displayTitle2.trim() };
       })
   )).then(filesWithTitles => {
     filesWithTitles.forEach(csv => {
