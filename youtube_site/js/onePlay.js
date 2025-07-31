@@ -6,7 +6,10 @@ let csvFiles = [
   { name: "2025/05/30 配信", file: "csv/20250530.csv" },
   { name: "2025/06/03 配信", file: "csv/20250603.csv" },
   { name: "2025/06/06a 配信", file: "csv/20250606a.csv" },
-  { name: "2025/06/06b 配信", file: "csv/20250606b.csv" }
+  { name: "2025/06/06b 配信", file: "csv/20250606b.csv" },
+  { name: "2025/06/19 配信", file: "csv/20250619.csv" },
+  { name: "2025/06/25 配信", file: "csv/20250625.csv" },
+  { name: "2025/07/27 配信", file: "csv/20250727.csv" }
 ];
 
 window.addEventListener("DOMContentLoaded", () => {
