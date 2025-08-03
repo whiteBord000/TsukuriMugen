@@ -37,7 +37,6 @@ function playRandom(retryCount = 0) {
   const startTime = video.start || 0;
   const duration = video.duration || 30;
 
-  // 情報表示
   document.getElementById("title").textContent = video.title;
   document.getElementById("date").textContent = video.date;
   document.getElementById("song").textContent = video.song;
@@ -46,15 +45,11 @@ function playRandom(retryCount = 0) {
   document.getElementById("duration").textContent = duration;
   document.getElementById("note").textContent = video.note;
 
-  // iframe読み込みしてからタイマー開始
   const player = document.getElementById("player");
-  player.onload = () => {
-    if (autoNextTimer) clearTimeout(autoNextTimer);
-    autoNextTimer = setTimeout(() => playRandom(), duration * 1000);
-  };
-
-  player.src = `https://www.youtube.com/embed/${videoId}?start=${startTime}&autoplay=1&mute=1`;
+  player.src = `https://www.youtube.com/embed/${videoId}?start=${startTime}&autoplay=1`; // ミュート解除
+  autoNextTimer = setTimeout(() => playRandom(), duration * 1000); // タイマーを直接セット
 }
+
 
 
 function extractVideoId(url) {
