@@ -81,8 +81,11 @@ function playSong(index) {
   iframe.setAttribute("allowfullscreen", "");
 
   const container = document.getElementById("player-container");
-  container.innerHTML = "";
-  container.appendChild(iframe);
+  container.innerHTML = `
+  <div class="player-wrapper">
+    <iframe src="${embedUrl}" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+  </div>
+`;
 
   const info = document.getElementById("info");
   info.innerHTML = `

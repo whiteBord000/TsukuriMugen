@@ -91,14 +91,23 @@ button:hover {
 }
 
 /* プレイヤー */
-iframe, #player {
+.player-wrapper {
+  position: relative;
   width: 100%;
-  height: auto;
+  max-width: 560px;    /* デスクトップ時の最大幅 */
+  aspect-ratio: 16 / 9; /* アスペクト比維持 */
   margin: 20px auto;
-  display: block;
+}
+
+.player-wrapper iframe {
+  position: absolute;
+  width: 100%;
+  height: 100%;
   border: 4px solid var(--button-color);
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  top: 0;
+  left: 0;
 }
 
 
