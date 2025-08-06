@@ -5,7 +5,7 @@
   /* 背景（ライトブルー） */
   --background-hedder-color: rgb(155, 188, 230);
   /* ボタン(ライトライトブルー) */
-  --buttom-color: rgb(200, 200, 230);
+  --button-color: rgb(200, 200, 230);
   /* 背景（淡いピンク） */
   --background-color: rgb(255, 240, 245);
   /* アクセント（薄いクリーム） */
@@ -92,8 +92,8 @@ button:hover {
 
 /* プレイヤー */
 iframe, #player {
-  width: 560px;
-  height: 315px;
+  width: 100%;
+  height: auto;
   margin: 20px auto;
   display: block;
   border: 4px solid var(--button-color);

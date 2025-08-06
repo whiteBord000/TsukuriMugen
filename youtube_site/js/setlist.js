@@ -74,16 +74,22 @@ const setlists = [
     "title": "〖 歌枠 〗 ラッキー７万人耐久〖 眠雲ツクリ / ミリプロ 〗",
     "videoUrl": "https://www.youtube.com/live/y24GlFS9zz0?si=6wMrw5fyHWilMzn4",
     "thumbnail": "https://img.youtube.com/vi/y24GlFS9zz0/hqdefault.jpg",
-    "csv": "20250727.csv"
+    "csv": "20250721.csv"
   },
   {
     "id": "setlist_2025_07_27",
     "title": "【眠雲ツクリ】最高のバトンを受け取りました。ラストかますぞ【 #ミリプロ20万人耐久歌枠リレー 】",
     "videoUrl": "https://www.youtube.com/live/NgFZN0VrJDQ?si=E0HTaBtqE88BUP5c",
     "thumbnail": "https://img.youtube.com/vi/NgFZN0VrJDQ/hqdefault.jpg",
-    "csv": "20250721.csv"
+    "csv": "20250727.csv"
+  },
+  {
+    "id": "setlist_2025_08_03",
+    "title": "〖 歌枠 〗 八月一発目はこうじゃろ〖 眠雲ツクリ / ミリプロ 〗",
+    "videoUrl": "https://www.youtube.com/live/-04_M7QpSvA?si=GTXLOk-TrfPNUEvb",
+    "thumbnail": "https://img.youtube.com/vi/-04_M7QpSvA/hqdefault.jpg",
+    "csv": "20250803.csv"
   }
-
   // {
   //   "id": "",
   //   "title": "",
