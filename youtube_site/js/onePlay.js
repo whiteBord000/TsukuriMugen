@@ -10,6 +10,10 @@ let csvFiles = [
   { file: "csv/20250606b.csv" },
   { file: "csv/20250619.csv" },
   { file: "csv/20250625.csv" },
+  { file: "csv/20250630.csv" },
+  { file: "csv/20250712.csv" },
+  { file: "csv/20250716.csv" },
+  { file: "csv/20250721.csv" },
   { file: "csv/20250727.csv" }
 ];
 
@@ -75,17 +79,12 @@ function playSong(index) {
   const end = song.startSeconds + song.duration;
   const embedUrl = `https://www.youtube.com/embed/${song.videoId}?start=${song.startSeconds}&end=${end}&autoplay=1`;
 
-  const iframe = document.createElement("iframe");
-  iframe.src = embedUrl;
-  iframe.allow = "autoplay; encrypted-media";
-  iframe.setAttribute("allowfullscreen", "");
-
   const container = document.getElementById("player-container");
   container.innerHTML = `
-  <div class="player-wrapper">
-    <iframe src="${embedUrl}" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-  </div>
-`;
+    <div class="player-wrapper">
+      <iframe src="${embedUrl}" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    </div>
+  `;
 
   const info = document.getElementById("info");
   info.innerHTML = `

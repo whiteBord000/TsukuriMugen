@@ -36,6 +36,13 @@ function playRandom(retryCount = 0) {
 
   const startTime = video.start || 0;
   const duration = video.duration || 30;
+   const embedUrl = `https://www.youtube.com/embed/${videoId}?start=${startTime}&autoplay=1`;
+
+  // 統一されたプレイヤー構造
+  const playerContainer = document.querySelector(".player-wrapper");
+  playerContainer.innerHTML = `
+    <iframe src="${embedUrl}" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+  `;
 
   document.getElementById("title").textContent = video.title;
   document.getElementById("date").textContent = video.date;
