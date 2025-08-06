@@ -79,13 +79,11 @@ function playSong(index) {
   const end = song.startSeconds + song.duration;
   const embedUrl = `https://www.youtube.com/embed/${song.videoId}?start=${song.startSeconds}&end=${end}&autoplay=1`;
 
-  const container = document.getElementById("player-container");
-  container.innerHTML = `
-    <div class="player-wrapper">
-      <iframe src="${embedUrl}" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-    </div>
-  `;
+  // 既存の.player-wrapperを取得してiframeだけ差し替える
+  const wrapper = document.querySelector(".player-wrapper");
+  wrapper.innerHTML = `<iframe src="${embedUrl}" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
 
+  // 曲情報更新
   const info = document.getElementById("info");
   info.innerHTML = `
     <strong>曲名:</strong> ${song.song}<br>
@@ -93,11 +91,13 @@ function playSong(index) {
     <strong>備考:</strong> ${song.note || "なし"}<br>
   `;
 
+  // 次曲タイマー
   playTimer = setTimeout(() => {
     currentIndex++;
     playSong(currentIndex);
   }, song.duration * 1000);
 }
+
 
 function nextSong() {
   if (currentIndex + 1 < songList.length) {

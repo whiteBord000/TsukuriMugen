@@ -52,8 +52,6 @@ function playRandom(retryCount = 0) {
   document.getElementById("duration").textContent = duration;
   document.getElementById("note").textContent = video.note;
 
-  const player = document.getElementById("player");
-  player.src = `https://www.youtube.com/embed/${videoId}?start=${startTime}&autoplay=1`; // ミュート解除
   autoNextTimer = setTimeout(() => playRandom(), duration * 1000); // タイマーを直接セット
 }
 
