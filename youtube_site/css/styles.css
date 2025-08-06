@@ -97,7 +97,7 @@ iframe, #player {
   padding: 20px;
   margin: 20px;
   max-width: 600px;
-  text-align: right;
+  text-align: left;
   backdrop-filter: blur(5px);
 }
 
@@ -107,19 +107,21 @@ iframe, #player {
   max-width: 40em;
   margin-right: auto;
   margin-left: auto;
-  text-align: right;
+  text-align: left;
 }
+
+/* wiki系テキスト*/
+#wiki, p {
+  max-width: 30em;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: left;
+}
+
 #wiki h1,
 #wiki h2,
 #wiki h3 {
   text-align: center;
-}
-
-/* wiki系テキスト */
-#wiki {
-  max-width: 40em;
-  margin-left: auto;
-  text-align: right;
 }
 
 
