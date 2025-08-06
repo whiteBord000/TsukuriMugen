@@ -15,12 +15,18 @@ body {
   margin: 0;
   font-family: 'Helvetica Neue', 'Noto Sans JP', sans-serif;
   color: var(--text-color);
-  background: linear-gradient(135deg, var(--background-color) 60%, var(--accent-color) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--background-color) 0%,
+    #ffffff 50%,
+    var(--accent-color) 100% 
+  );
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
+
 
 h1,
 h2,
@@ -36,7 +42,12 @@ p {
 /* ナビバー */
 nav {
   width: 100%;
-  background: linear-gradient(90deg, var(--button-color), var(--accent-color));
+  background: linear-gradient(
+    90deg,
+    var(--button-color) 0%,
+    #ffffff 30%,
+    var(--accent-color) 100% 
+  );
   padding: 10px;
   text-align: center;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
