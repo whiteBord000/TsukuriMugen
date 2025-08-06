@@ -105,6 +105,7 @@ iframe, #player {
 /* テキストボックス共通設定 */
 #info, p, h1, h2, h3 {
   max-width: 40em;
+  margin-right: auto;
   margin-left: auto;
   text-align: right;
 }
