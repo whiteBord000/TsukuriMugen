@@ -109,6 +109,11 @@ iframe, #player {
   margin-left: auto;
   text-align: right;
 }
+#wiki h1,
+#wiki h2,
+#wiki h3 {
+  text-align: center;
+}
 
 /* wiki系テキスト */
 #wiki {
