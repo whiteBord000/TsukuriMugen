@@ -1,13 +1,15 @@
 /* カラーパレット */
 :root {
-  --text-color: rgb(122, 105, 185);
   /* 文字色（パープル系） */
-  --button-color: rgb(155, 188, 230);
-  /* ボタン（ライトブルー） */
-  --background-color: rgb(255, 240, 245);
+  --text-color: rgb(122, 105, 185);
+  /* 背景（ライトブルー） */
+  --background-hedder-color: rgb(155, 188, 230);
+  /* ボタン(ライトライトブルー) */
+  --buttom-color: rgb(200, 200, 230);
   /* 背景（淡いピンク） */
-  --accent-color: rgb(250, 255, 240);
+  --background-color: rgb(255, 240, 245);
   /* アクセント（薄いクリーム） */
+  --accent-color: rgb(250, 255, 240);
 }
 
 /* デフォルト設定 */
@@ -44,7 +46,7 @@ nav {
   width: 100%;
   background: linear-gradient(
     90deg,
-    var(--button-color) 0%,
+    var(--background-hedder-color) 0%,
     #ffffff 30%,
     var(--accent-color) 100% 
   );
@@ -181,4 +183,14 @@ iframe, #player {
   display: block;
   margin-bottom: 1em;
   cursor: pointer;
+}
+
+a {
+  color: var(--text-color);
+  text-decoration: underline;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--button-color);
 }
