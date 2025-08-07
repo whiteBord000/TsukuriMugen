@@ -19,9 +19,9 @@ body {
   color: var(--text-color);
   background: linear-gradient(
     135deg,
-    var(--background-color) 0%,
+    var(--accent-color) 100%,
     #ffffff 50%,
-    var(--accent-color) 100% 
+    var(--background-color) 0%
   );
   min-height: 100vh;
   display: flex;

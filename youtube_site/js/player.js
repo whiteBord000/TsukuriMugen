@@ -51,7 +51,6 @@ function playRandom(retryCount = 0) {
   document.getElementById("start").textContent = startTime;
   document.getElementById("duration").textContent = duration;
   document.getElementById("note").textContent = video.note;
-
   autoNextTimer = setTimeout(() => playRandom(), duration * 1000); // タイマーを直接セット
 }
 
