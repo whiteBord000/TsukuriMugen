@@ -203,3 +203,25 @@ a {
 a:hover {
   color: var(--button-color);
 }
+
+#info {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  row-gap: 0.3em;
+  column-gap: 1em;
+}
+
+#info p {
+  display: contents;
+}
+
+#info strong {
+  text-align: right;
+  font-weight: bold;
+}
+
+#info span {
+  text-align: left;
+  display: inline-block;
+  word-break: break-word;
+}
