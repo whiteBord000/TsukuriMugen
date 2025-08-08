@@ -5,101 +5,70 @@ function extractVideoId(url) {
     url.match(/\/live\/([^?&]+)/);
   return m ? m[1] : "";
 }
-
-// 曲の一意キー
 function makeTrackId({ url, start, duration }) {
   const vid = extractVideoId(url);
   return `${vid}_${parseInt(start || 0)}_${parseInt(duration || 0)}`;
 }
 
-
-window.addEventListener("DOMContentLoaded", () => {
-  const favs = JSON.parse(localStorage.getItem("favorites") || "[]");
-  if (favs.length === 0) {
-    document.getElementById("favResults").innerHTML = "<p>お気に入りが登録されていません。</p>";
-    return;
-  }
-
-  fetch("csv/All_Music.csv")
-    .then(res => res.text())
-    .then(text => {
-      const rows = text.trim().split("\n").slice(1);
-      const songs = rows.map(row => {
-        const [title, date, url, song, artist, start, duration, note] = row.split(",");
-        return { title, date, url, song, artist, start, duration, note };
-      });
-
-      const favSongs = songs.filter(song => favs.includes(song.url));
-      renderFavorites(favSongs);
-    });
-});
-
-function renderFavorites(favSongs) {
-  const container = document.getElementById("favResults");
-  container.innerHTML = "";
-
-  favSongs.forEach(song => {
-    const div = document.createElement("div");
-    div.innerHTML = `
-      <p><strong>${song.song}</strong> - ${song.artist}</p>
-      <button onclick="playSong('${song.url}', ${song.start}, ${song.duration})">▶ 再生</button>
-    `;
-    container.appendChild(div);
-  });
-}
-
-function playSong(url, start, duration) {
-  const videoId = url.match(/(?:\/|v=|\/live\/)([A-Za-z0-9_-]{11})/)[1];
-  const embedUrl = `https://www.youtube.com/embed/${videoId}?start=${start}&autoplay=1`;
-
-  const popup = window.open("", "再生", "width=640,height=400");
-  popup.document.write(`
-    <html><body>
-      <iframe width="560" height="315" src="${embedUrl}" frameborder="0" allowfullscreen></iframe>
-    </body></html>
-  `);
-  setTimeout(() => popup.close(), duration * 1000);
-}
-
 let allSongs = [];
-let queue = [];           // お気に入りの曲オブジェクト配列
+let queue = [];
 let current = 0;
-let autoNextTimer = null;
 let autoNext = true;
+let autoNextTimer = null;
 
-document.addEventListener("DOMContentLoaded", () => {
-  fetch("csv/All_Music.csv")
-    .then(res => res.text())
-    .then(text => {
-      const rows = text.trim().split("\n").slice(1);
-      allSongs = rows.map(row => {
-        const [title, date, url, song, artist, start, duration, note] = row.split(",");
-        const obj = { title, date, url, song, artist, start, duration, note };
-        obj.id = makeTrackId(obj);  // ← ここでもid付与
-        return obj;
-      });
-      loadFavorites();
-    });
+// 初期化
+document.addEventListener("DOMContentLoaded", async () => {
+  const text = await fetch("csv/All_Music.csv").then(r => r.text());
+  const rows = text.trim().split("\n").slice(1);
+  allSongs = rows.map(row => {
+    const [title, date, url, song, artist, start, duration, note] = row.split(",");
+    const obj = { title, date, url, song, artist, start, duration, note };
+    obj.id = makeTrackId(obj);
+    return obj;
+  });
 
-  // ついでにUI制御（あれば）
+  migrateFavoritesIfNeeded(); // ← ここでURL保存→ID保存へ移行
+
+  loadFavorites();
+
+  // ボタン委譲
   const favContainer = document.getElementById("favResults");
-  favContainer.addEventListener("click", (e) => {
+  favContainer.addEventListener("click", e => {
     if (e.target.matches(".play-one")) {
-      const idx = parseInt(e.target.dataset.index);
-      playAt(idx);
+      playAt(parseInt(e.target.dataset.index));
     }
     if (e.target.matches(".remove-fav")) {
-      const id = e.target.dataset.id;
-      removeFavorite(id);
+      removeFavorite(e.target.dataset.id);
       loadFavorites();
     }
   });
 });
 
+// URLをIDに
+function migrateFavoritesIfNeeded() {
+  const raw = JSON.parse(localStorage.getItem("favorites") || "[]");
+  if (!raw.length) return;
+
+  // URLっぽい文字列が入ってたらIDへ変換
+  const looksUrl = raw.some(v => typeof v === "string" && v.startsWith("http"));
+  if (!looksUrl) return;
+
+  const ids = [];
+  for (const v of raw) {
+    if (typeof v === "string" && v.startsWith("http")) {
+      const hit = allSongs.find(s => s.url === v);
+      if (hit) ids.push(hit.id);
+    } else if (typeof v === "string") {
+      ids.push(v);
+    }
+  }
+  localStorage.setItem("favorites", JSON.stringify(ids));
+}
+
+// ロード制御
 function loadFavorites() {
-  const favIds = JSON.parse(localStorage.getItem("favorites") || "[]");
-  const favSet = new Set(favIds);
-  queue = allSongs.filter(s => favSet.has(s.id));
+  const favIds = new Set(JSON.parse(localStorage.getItem("favorites") || "[]"));
+  queue = allSongs.filter(s => favIds.has(s.id));
   current = 0;
   renderFavList();
 }
@@ -108,12 +77,11 @@ function renderFavList() {
   const container = document.getElementById("favResults");
   container.innerHTML = "";
 
-  if (queue.length === 0) {
+  if (!queue.length) {
     container.innerHTML = "<p>お気に入りが登録されていません。</p>";
     return;
   }
 
-  // コントロール
   container.insertAdjacentHTML("beforeend", `
     <div style="text-align:center;">
       <button id="prevBtn">⏮ 前へ</button>
@@ -122,7 +90,6 @@ function renderFavList() {
     </div>
   `);
 
-  // リスト
   const ul = document.createElement("ul");
   ul.style.listStyle = "none";
   ul.style.padding = "0";
@@ -138,7 +105,6 @@ function renderFavList() {
   });
   container.appendChild(ul);
 
-  // ハンドラ
   document.getElementById("prevBtn").onclick = prev;
   document.getElementById("nextBtn").onclick = next;
   document.getElementById("toggleAuto").onclick = () => {
@@ -147,6 +113,7 @@ function renderFavList() {
   };
 }
 
+// 再生制御
 function playAt(index) {
   if (index < 0 || index >= queue.length) return;
   current = index;
@@ -157,34 +124,26 @@ function playAt(index) {
   const duration = parseInt(s.duration || 30);
   const embedUrl = `https://www.youtube.com/embed/${vid}?start=${start}&autoplay=1`;
 
-  // playerは常に1つだけ差し替える
   const wrapper = document.querySelector(".player-wrapper");
   wrapper.innerHTML = `<iframe src="${embedUrl}" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
 
-  // 次曲予約
   if (autoNext) {
     if (autoNextTimer) clearTimeout(autoNextTimer);
     autoNextTimer = setTimeout(next, duration * 1000);
   }
 
-  // 表示更新
   renderFavList();
 }
 
 function next() {
-  if (current + 1 < queue.length) {
-    playAt(current + 1);
-  }
+  if (current + 1 < queue.length) playAt(current + 1);
 }
-
 function prev() {
-  if (current - 1 >= 0) {
-    playAt(current - 1);
-  }
+  if (current - 1 >= 0) playAt(current - 1);
 }
 
 function removeFavorite(id) {
-  let favs = new Set(JSON.parse(localStorage.getItem("favorites") || "[]"));
-  favs.delete(id);
-  localStorage.setItem("favorites", JSON.stringify([...favs]));
+  const set = new Set(JSON.parse(localStorage.getItem("favorites") || "[]"));
+  set.delete(id);
+  localStorage.setItem("favorites", JSON.stringify([...set]));
 }
