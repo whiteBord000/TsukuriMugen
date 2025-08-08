@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>楽曲検索</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="js/search.js" defer></script>
+    <script src="js/menu.js" defer></script>
+</head>
+
+<body>
+    <nav>
+        <button id="menu-toggle">☰ メニュー</button>
+        <div id="menu" class="menu hidden">
+            <button onclick="location.href='index.html'">機能・注意事項</button>
+            <button onclick="location.href='mugen.html'">無限ライブ</button>
+            <button onclick="location.href='onePlay.html'">1配信再生</button>
+            <button onclick="location.href='setlist.html'">セットリスト一覧</button>
+            <button onclick="location.href='search.html'">🔍 楽曲検索</button>
+            <button onclick="location.href='favorites.html'">⭐ お気に入り</button>
+            <button onclick="location.href='wiki.html'">簡易Wiki</button>
+        </div>
+    </nav>
+    <h1>楽曲検索</h1>
+    <input type="text" id="searchInput" placeholder="曲名・アーティスト名・備考で検索" />
+    <div id="searchResults"></div>
+</body>
+
+</html>

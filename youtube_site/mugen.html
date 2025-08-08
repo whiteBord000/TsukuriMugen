@@ -4,15 +4,21 @@
   <meta charset="UTF-8">
   <title>無限ライブ</title>
   <link rel="stylesheet" href="css/styles.css">
+  <script src="js/menu.js" defer></script>
 </head>
 <body>
-  <nav style="margin-bottom: 20px;">
+  <nav>
+  <button id="menu-toggle">☰ メニュー</button>
+  <div id="menu" class="menu hidden">
     <button onclick="location.href='index.html'">機能・注意事項</button>
     <button onclick="location.href='mugen.html'">無限ライブ</button>
     <button onclick="location.href='onePlay.html'">1配信再生</button>
     <button onclick="location.href='setlist.html'">セットリスト一覧</button>
+    <button onclick="location.href='search.html'">🔍 楽曲検索</button>
+    <button onclick="location.href='favorites.html'">⭐ お気に入り</button>
     <button onclick="location.href='wiki.html'">簡易Wiki</button>
-  </nav>
+  </div>
+</nav>
 
   <h1>眠雲の無限ライブ</h1>
   <div class="player-wrapper"></div>

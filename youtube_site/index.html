@@ -5,15 +5,21 @@
   <meta charset="UTF-8">
   <title>機能・注意事項</title>
   <link rel="stylesheet" href="css/styles.css">
+  <script src="js/menu.js" defer></script>
 </head>
 
 <body>
-  <nav style="margin-bottom: 20px;">
-    <button onclick="location.href='index.html'">機能・注意事項</button>
-    <button onclick="location.href='mugen.html'">無限ライブ</button>
-    <button onclick="location.href='onePlay.html'">1配信再生</button>
-    <button onclick="location.href='setlist.html'">セットリスト一覧</button>
-    <button onclick="location.href='wiki.html'">簡易Wiki</button>
+  <nav>
+    <button id="menu-toggle">☰ メニュー</button>
+    <div id="menu" class="menu hidden">
+      <button onclick="location.href='index.html'">機能・注意事項</button>
+      <button onclick="location.href='mugen.html'">無限ライブ</button>
+      <button onclick="location.href='onePlay.html'">1配信再生</button>
+      <button onclick="location.href='setlist.html'">セットリスト一覧</button>
+      <button onclick="location.href='search.html'">🔍 楽曲検索</button>
+      <button onclick="location.href='favorites.html'">⭐ お気に入り</button>
+      <button onclick="location.href='wiki.html'">簡易Wiki</button>
+    </div>
   </nav>
   <div id="wiki">
     <h1>機能・注意事項</h1>
@@ -43,7 +49,8 @@
     <h2>きっかけになった・参考になった素晴らしい先人の２人</h2>
     <h3>夕星 様</h3>
     <p><a href="https://note.com/yudutu/n/n33c03ce7919b" target="_blank">https://note.com/yudutu/n/n33c03ce7919b</a></p>
-    <p><a href="https://fvblog-2434.web.app/songs/index.html" target="_blank">https://fvblog-2434.web.app/songs/index.html</a></p>
+    <p><a href="https://fvblog-2434.web.app/songs/index.html"
+        target="_blank">https://fvblog-2434.web.app/songs/index.html</a></p>
 
     <h3>愛犬オー 様</h3>
     <p><a href="https://note.com/iken_0/n/n6faf82fe3854" target="_blank">https://note.com/iken_0/n/n6faf82fe3854</a></p>
