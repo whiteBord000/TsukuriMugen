@@ -55,7 +55,7 @@ nav {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-nav button {
+nav .menu button {
   background: var(--button-color);
   color: var(--text-color);
   border: none;
@@ -67,7 +67,7 @@ nav button {
   transition: all 0.3s ease;
 }
 
-nav button:hover {
+nav .menu button:hover {
   background: var(--accent-color);
   transform: translateY(-2px);
 }
