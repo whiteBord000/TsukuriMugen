@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>更新情報</title>
+  <meta name="robots" content="noindex" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <script src="js/menu.js" defer></script>
+  <script src="js/updates.js" defer></script>
+  <style>
+    .changelog { max-width: 720px; margin: 20px auto; padding: 12px 16px; background: rgba(255,255,255,.85); border:2px solid var(--button-color); border-radius:12px;}
+    .log-item { padding:12px 6px; border-bottom:1px dashed var(--button-color);}
+    .log-item:last-child{ border-bottom:none; }
+    .log-head { display:flex; gap:8px; align-items:baseline; }
+    .log-date { font-weight:bold; min-width: 7em; }
+    .log-title { font-size:1.05em; }
+    .log-body { margin-top:6px; }
+    .tag { display:inline-block; padding:2px 8px; border-radius:999px; border:1px solid var(--button-color); margin-left:6px; font-size:.85em;}
+  </style>
+</head>
+<body>
+  <nav>
+    <button id="menu-toggle">☰ メニュー</button>
+    <div id="menu" class="menu hidden">
+      <button onclick="location.href='index.html'">ようこそ</button>
+      <button onclick="location.href='mugen.html'">FMツクリ∞</button>
+      <button onclick="location.href='onePlay.html'">1配信再生</button>
+      <button onclick="location.href='setlist.html'">セットリスト一覧</button>
+      <button onclick="location.href='search.html'">楽曲検索</button>
+      <button onclick="location.href='favorites.html'">お気に入り</button>
+      <button onclick="location.href='wiki.html'">簡易Wiki</button>
+    </div>
+  </nav>
+
+  <h1 style="text-align:center;">更新情報</h1>
+
+  <!-- 直URLガード（?from=home 必須） -->
+   <!-- やってみたいだけ、あとで消す -->
+  <div id="guard" class="changelog" style="display:none;">
+    <p>このページは<strong>「ようこそ」ページ</strong>からのみアクセスできます。</p>
+    <p style="text-align:center;">
+      <button onclick="location.href='index.html'">ようこそへ戻る</button>
+    </p>
+  </div>
+
+  <div id="changelog" class="changelog" style="display:none;">
+    <div style="text-align:right; margin-bottom:8px;">
+      <a href="index.html">← ようこそへ戻る</a>
+    </div>
+    <div id="logList"></div>
+  </div>
+</body>
+</html>
