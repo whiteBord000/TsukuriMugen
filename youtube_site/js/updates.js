@@ -1,19 +1,6 @@
-// js/updates.js
-function hasFromHome() {
-  const sp = new URLSearchParams(location.search);
-  return sp.get("from") === "home";
-}
-
 window.addEventListener("DOMContentLoaded", async () => {
-  const guard = document.getElementById("guard");
-  const area  = document.getElementById("changelog");
-  if (!hasFromHome()) {
-    guard.style.display = "block";
-    return;
-  }
-
   try {
-    const res = await fetch("updates.json", { cache: "no-store" });
+    const res = await fetch("js/updates.json", { cache: "no-store" });
     const items = await res.json();
 
     // 日付降順
@@ -48,11 +35,10 @@ window.addEventListener("DOMContentLoaded", async () => {
 
       list.appendChild(div);
     });
-
-    area.style.display = "block";
   } catch (e) {
-    guard.style.display = "block";
-    console.error(e);
+    console.error("更新情報の読み込みに失敗しました:", e);
+    const list = document.getElementById("logList");
+    list.innerHTML = "<p>読み込みに失敗しました。時間をおいて再度お試しください。</p>";
   }
 });
 
