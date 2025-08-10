@@ -1,3 +1,31 @@
+// setlist.js（差し替え版）
+
+/** ＝＝＝ お気に入り用ユーティリティ ＝＝＝ */
+function extractVideoId(url) {
+  const m =
+    url.match(/[?&]v=([^&]+)/) ||
+    url.match(/youtu\.be\/([^?&]+)/) ||
+    url.match(/\/live\/([^?&]+)/);
+  return m ? m[1] : "";
+}
+function makeTrackId({ url, start, duration }) {
+  const vid = extractVideoId(url);
+  return `${vid}_${parseInt(start || 0)}_${parseInt(duration || 0)}`;
+}
+function getFavSet() {
+  return new Set(JSON.parse(localStorage.getItem("favorites") || "[]"));
+}
+function saveFavSet(set) {
+  localStorage.setItem("favorites", JSON.stringify([...set]));
+}
+function toggleFavoriteById(id) {
+  const set = getFavSet();
+  if (set.has(id)) set.delete(id); else set.add(id);
+  saveFavSet(set);
+  return set.has(id);
+}
+
+/** ＝＝＝ 既存のセットリスト定義 ＝＝＝ */
 const setlists = [
   {
     "id": "setlist_2025_05_20",
@@ -89,15 +117,14 @@ const setlists = [
     "videoUrl": "https://www.youtube.com/live/-04_M7QpSvA?si=GTXLOk-TrfPNUEvb",
     "thumbnail": "https://img.youtube.com/vi/-04_M7QpSvA/hqdefault.jpg",
     "csv": "20250803.csv"
+  },
+  {
+    "id": "setlist_2025_08_10",
+    "title": "〖 歌枠 〗お昼なにたべよ〖 眠雲ツクリ / ミリプロ 〗",
+    "videoUrl": "https://www.youtube.com/live/L8Ydc01uae0?si=iac2S4_08ZnvWlDF",
+    "thumbnail": "https://img.youtube.com/vi/L8Ydc01uae0/hqdefault.jpg",
+    "csv": "20250810.csv"
   }
-  // {
-  //   "id": "",
-  //   "title": "",
-  //   "videoUrl": "",
-  //   "thumbnail": "https://img.youtube.com/vi//hqdefault.jpg",
-  //   "csv": ""
-  // }
-
 ];
 
 let lastClicked = null;
@@ -133,24 +160,34 @@ function fetchAndShowCSV(csvFileName, title) {
     .then(response => response.text())
     .then(csvText => {
       const rows = csvText.trim().split("\n").map(row => row.split(","));
-      const table = document.createElement("table");
+      const headerRow = rows[0];
+      const dataRows = rows.slice(1);
 
-      // 表示したくない列のインデックス（例：0=title, 1=date, 2=url, 5=artist, 6=duration）
+      // 画面に見せない列（タイトル/日付/URL/開始/秒数は非表示）
       const excludeCols = [0, 1, 2, 5, 6];
+
+      const table = document.createElement("table");
 
       // ヘッダー行
       const header = table.insertRow();
-      rows[0].forEach((col, i) => {
+      headerRow.forEach((col, i) => {
         if (!excludeCols.includes(i)) {
           const th = document.createElement("th");
           th.textContent = col;
           header.appendChild(th);
         }
       });
+      // 右端にお気に入り列
+      const favTh = document.createElement("th");
+      favTh.textContent = "お気に入り";
+      header.appendChild(favTh);
 
       // データ行
-      rows.slice(1).forEach(cols => {
+      const favSet = getFavSet();
+      dataRows.forEach(cols => {
         const tr = table.insertRow();
+
+        // 表示列
         cols.forEach((col, i) => {
           if (!excludeCols.includes(i)) {
             const td = document.createElement("td");
@@ -158,23 +195,43 @@ function fetchAndShowCSV(csvFileName, title) {
             tr.appendChild(td);
           }
         });
+
+        // ID作成のための元情報
+        const url = cols[2];
+        const start = cols[5];
+        const duration = cols[6];
+        const id = makeTrackId({ url, start, duration });
+
+        // お気に入りボタン列
+        const favTd = document.createElement("td");
+        const btn = document.createElement("button");
+        btn.className = "fav-btn";
+        btn.dataset.id = id;
+        btn.textContent = favSet.has(id) ? "★（お気に入り）" : "☆ お気に入り";
+        btn.addEventListener("click", (e) => {
+          const nowOn = toggleFavoriteById(id);
+          e.currentTarget.textContent = nowOn ? "★（お気に入り）" : "☆ お気に入り";
+        });
+        favTd.appendChild(btn);
+        tr.appendChild(favTd);
       });
 
+      // ポップアップ描画
       const popup = document.getElementById("popup");
       const content = document.getElementById("popup-content");
       content.innerHTML = `<h2>${title}</h2>`;
 
-      // サムネイルをクリック可能なリンクで表示
+      // サムネイル（クリックで0秒スタート）
       const thumb = document.createElement("img");
       thumb.src = currentSet.thumbnail;
       thumb.className = "popup-thumbnail";
       thumb.alt = title;
       thumb.addEventListener("click", () => {
-        // 遷移先を 0 秒開始にする
         const zeroStartUrl = currentSet.videoUrl.replace(/(\?.*)?$/, "") + "?t=0";
         window.open(zeroStartUrl, "_blank");
       });
       content.appendChild(thumb);
+
       // セットリスト表
       content.appendChild(table);
       popup.style.display = "block";
