@@ -1,38 +1,64 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
   <meta charset="UTF-8">
   <title>FMツクリ∞</title>
   <link rel="stylesheet" href="css/styles.css">
   <script src="js/menu.js" defer></script>
 </head>
+
 <body>
   <nav>
-  <button id="menu-toggle">☰ メニュー</button>
-  <div id="menu" class="menu hidden">
-    <button onclick="location.href='index.html'">ようこそ</button>
-    <button onclick="location.href='mugen.html'">FMツクリ∞</button>
-    <button onclick="location.href='onePlay.html'">1配信再生</button>
-    <button onclick="location.href='setlist.html'">セットリスト一覧</button>
-    <button onclick="location.href='search.html'">楽曲検索</button>
-    <button onclick="location.href='favorites.html'">お気に入り</button>
-    <button onclick="location.href='wiki.html'">簡易Wiki</button>
-  </div>
-</nav>
+    <button id="menu-toggle">☰ メニュー</button>
+    <div id="menu" class="menu hidden">
+      <button onclick="location.href='index.html'">ようこそ</button>
+      <button onclick="location.href='mugen.html'">FMツクリ∞</button>
+      <button onclick="location.href='onePlay.html'">1配信再生</button>
+      <button onclick="location.href='setlist.html'">セットリスト一覧</button>
+      <button onclick="location.href='search.html'">楽曲検索</button>
+      <button onclick="location.href='favorites.html'">お気に入り</button>
+      <button onclick="location.href='wiki.html'">簡易Wiki</button>
+    </div>
+  </nav>
 
   <h1>FMツクリ∞</h1>
   <div class="player-wrapper"></div>
   <button onclick="playRandom()">次の曲へ</button>
 
-<table id="info">
-  <tr><th>動画タイトル:</th><td id="title"></td></tr>
-  <tr><th>配信日:</th><td id="date"></td></tr>
-  <tr><th>曲名:</th><td id="song"></td></tr>
-  <tr><th>アーティスト:</th><td id="artist"></td></tr>
-  <tr><th>開始時間:</th><td id="start"></td></tr>
-  <tr><th>再生秒数:</th><td id="duration"></td></tr>
-  <tr><th>備考:</th><td id="note"></td></tr>
-</table>
+  <table id="info">
+    <tr>
+      <th>動画タイトル:</th>
+      <td id="title"></td>
+    </tr>
+    <tr>
+      <th>配信日:</th>
+      <td id="date"></td>
+    </tr>
+    <tr>
+      <th>曲名:</th>
+      <td id="song"></td>
+    </tr>
+    <tr>
+      <th>アーティスト:</th>
+      <td id="artist"></td>
+    </tr>
+    <tr>
+      <th>開始時間:</th>
+      <td id="start"></td>
+    </tr>
+    <tr>
+      <th>再生秒数:</th>
+      <td id="duration"></td>
+    </tr>
+    <tr>
+      <th>備考:</th>
+      <td id="note"></td>
+    </tr>
+  </table>
+  <div style="text-align:center;">
+    <button id="fav-btn">☆ お気に入り</button>
+  </div>
 
   <script src="js/player.js"></script>
 </body>

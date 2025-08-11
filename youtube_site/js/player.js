@@ -1,6 +1,33 @@
 let data = [];
 let autoNextTimer = null;
 
+// ID生成を追加
+function makeTrackId({ url, start, duration }) {
+  const vid = extractVideoId(url);
+  return `${vid}_${parseInt(start || 0)}_${parseInt(duration || 0)}`;
+}
+
+function getFavSet() {
+  return new Set(JSON.parse(localStorage.getItem("favorites") || "[]"));
+}
+function setFavSet(set) {
+  localStorage.setItem("favorites", JSON.stringify([...set]));
+}
+function isFavorite(id) {
+  return getFavSet().has(id);
+}
+function toggleFavoriteById(id) {
+  const set = getFavSet();
+  if (set.has(id)) set.delete(id); else set.add(id);
+  setFavSet(set);
+  updateFavButton(id);
+}
+function updateFavButton(id) {
+  const btn = document.getElementById("fav-btn");
+  if (!btn) return;
+  btn.textContent = isFavorite(id) ? "★（お気に入り）" : "☆ お気に入り";
+}
+
 fetch("csv/All_Music.csv") // 再生する曲のリストを設定
   .then(res => res.text())
   .then(text => {
@@ -18,6 +45,13 @@ fetch("csv/All_Music.csv") // 再生する曲のリストを設定
         note
       };
     });
+    const favBtn = document.getElementById("fav-btn");
+    if (favBtn) {
+      favBtn.addEventListener("click", () => {
+        if (!window.__currentTrackId) return;
+        toggleFavoriteById(window.__currentTrackId);
+      });
+    }
     playRandom();  // 初回再生
   });
 
@@ -36,7 +70,7 @@ function playRandom(retryCount = 0) {
 
   const startTime = video.start || 0;
   const duration = video.duration || 30;
-   const embedUrl = `https://www.youtube.com/embed/${videoId}?start=${startTime}&autoplay=1`;
+  const embedUrl = `https://www.youtube.com/embed/${videoId}?start=${startTime}&autoplay=1`;
 
   // 統一されたプレイヤー構造
   const playerContainer = document.querySelector(".player-wrapper");
@@ -52,9 +86,12 @@ function playRandom(retryCount = 0) {
   document.getElementById("duration").textContent = duration;
   document.getElementById("note").textContent = video.note;
   autoNextTimer = setTimeout(() => playRandom(), duration * 1000); // タイマーを直接セット
+
+  window.__currentTrackId = makeTrackId({ url: video.url, start: startTime, duration });
+  updateFavButton(window.__currentTrackId);
+
+  autoNextTimer = setTimeout(() => playRandom(), duration * 1000);
 }
-
-
 
 function extractVideoId(url) {
   const match =
