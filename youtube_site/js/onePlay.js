@@ -15,7 +15,8 @@ let csvFiles = [
   { file: "csv/20250716.csv" },
   { file: "csv/20250721.csv" },
   { file: "csv/20250727.csv" },
-  { file: "csv/20250803.csv" }
+  { file: "csv/20250803.csv" },
+  { file: "csv/20250809.csv" }
 ];
 
 window.addEventListener("DOMContentLoaded", () => {

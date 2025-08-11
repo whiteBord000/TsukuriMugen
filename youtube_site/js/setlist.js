@@ -119,11 +119,11 @@ const setlists = [
     "csv": "20250803.csv"
   },
   {
-    "id": "setlist_2025_08_10",
+    "id": "setlist_2025_08_09",
     "title": "〖 歌枠 〗お昼なにたべよ〖 眠雲ツクリ / ミリプロ 〗",
     "videoUrl": "https://www.youtube.com/live/L8Ydc01uae0?si=iac2S4_08ZnvWlDF",
     "thumbnail": "https://img.youtube.com/vi/L8Ydc01uae0/hqdefault.jpg",
-    "csv": "20250810.csv"
+    "csv": "20250809.csv"
   }
 ];
 
