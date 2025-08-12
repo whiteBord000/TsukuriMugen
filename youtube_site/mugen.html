@@ -36,6 +36,10 @@
       <td id="date"></td>
     </tr>
     <tr>
+      <th>共有URL:</th>
+      <td id="shareUrl"></td>
+    </tr>
+    <tr>
       <th>曲名:</th>
       <td id="song"></td>
     </tr>
@@ -59,6 +63,15 @@
   <div style="text-align:center;">
     <button id="fav-btn">☆ お気に入り</button>
   </div>
-
+  <div style="text-align:center;">
+    <button id="open-history">再生履歴</button>
+  </div>
   <script src="js/player.js"></script>
+
+  <div id="historyPopup" class="popup" style="display:none;">
+    <button onclick="closeHistory()">閉じる</button>
+    <h2>再生履歴</h2>
+    <div id="historyList"></div>
+  </div>
+
 </body>
