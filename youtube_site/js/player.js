@@ -1,6 +1,10 @@
 let data = [];
 let autoNextTimer = null;
+let ytPlayer = null;
+let apiReady = false;
+let startWhenDataReady = false;
 
+/* ===== 共有URL & クリップボード ===== */
 function buildShareUrl(videoId, startSec) {
   const s = parseInt(startSec || 0);
   return `https://youtu.be/${videoId}?t=${s}`;
@@ -9,7 +13,6 @@ function copyToClipboard(text) {
   navigator.clipboard?.writeText(text).then(
     () => alert("コピーしました"),
     () => {
-      // クリップボードAPI非対応の簡易フォールバック
       const ta = document.createElement("textarea");
       ta.value = text; document.body.appendChild(ta);
       ta.select(); document.execCommand("copy");
@@ -19,12 +22,20 @@ function copyToClipboard(text) {
   );
 }
 
-// ID生成を追加
+/* ===== ID生成（お気に入り） ===== */
+function extractVideoId(url) {
+  const match =
+    url.match(/[?&]v=([^&]+)/) ||
+    url.match(/youtu\.be\/([^?&]+)/) ||
+    url.match(/\/live\/([^?&]+)/);
+  return match ? match[1] : "";
+}
 function makeTrackId({ url, start, duration }) {
   const vid = extractVideoId(url);
   return `${vid}_${parseInt(start || 0)}_${parseInt(duration || 0)}`;
 }
 
+/* ===== お気に入りユーティリティ ===== */
 function getFavSet() {
   return new Set(JSON.parse(localStorage.getItem("favorites") || "[]"));
 }
@@ -46,7 +57,8 @@ function updateFavButton(id) {
   btn.textContent = isFavorite(id) ? "★（お気に入り）" : "☆ お気に入り";
 }
 
-fetch("csv/All_Music.csv") // 再生する曲のリストを設定
+/* ===== CSV読み込み ===== */
+fetch("csv/All_Music.csv")
   .then(res => res.text())
   .then(text => {
     const rows = text.trim().split("\n").slice(1); // ヘッダー除外
@@ -63,6 +75,8 @@ fetch("csv/All_Music.csv") // 再生する曲のリストを設定
         note
       };
     });
+
+    // お気に入りボタン
     const favBtn = document.getElementById("fav-btn");
     if (favBtn) {
       favBtn.addEventListener("click", () => {
@@ -70,13 +84,40 @@ fetch("csv/All_Music.csv") // 再生する曲のリストを設定
         toggleFavoriteById(window.__currentTrackId);
       });
     }
-    playRandom();  // 初回再生
+
+    // 履歴ポップアップボタン
     const openHistBtn = document.getElementById("open-history");
     if (openHistBtn) openHistBtn.onclick = openHistory;
-    // HTMLの onclick から呼べるように（ポップアップの閉じるボタン用）
+    // HTMLの onclick から呼べるように
     window.closeHistory = closeHistory;
+
+    // APIが準備済みなら開始、未準備ならフラグだけ立てる
+    if (apiReady) playRandom();
+    else startWhenDataReady = true;
   });
 
+/* ===== YouTube Iframe API 初期化 ===== */
+window.onYouTubeIframeAPIReady = function () {
+  ytPlayer = new YT.Player("yt-player", {
+    playerVars: { autoplay: 1, rel: 0, controls: 1 },
+    events: {
+      onReady: () => {
+        apiReady = true;
+        if (startWhenDataReady && data.length) playRandom();
+      },
+      onStateChange: onPlayerStateChange
+    }
+  });
+};
+
+function onPlayerStateChange(ev) {
+  if (ev.data === YT.PlayerState.ENDED) {
+    if (autoNextTimer) clearTimeout(autoNextTimer);
+    playRandom();
+  }
+}
+
+/* ===== メイン再生 ===== */
 function playRandom(retryCount = 0) {
   if (autoNextTimer) clearTimeout(autoNextTimer);
 
@@ -90,27 +131,37 @@ function playRandom(retryCount = 0) {
     return;
   }
 
-  const startTime = video.start || 0;
-  const duration = video.duration || 30;
-  const embedUrl = `https://www.youtube.com/embed/${videoId}?start=${startTime}&autoplay=1`;
+  const startTime = parseInt(video.start || 0);
+  const duration = parseInt(video.duration || 30);
+  const endTime = startTime + duration;
 
-  // 統一されたプレイヤー構造
-  const playerContainer = document.querySelector(".player-wrapper");
-  playerContainer.innerHTML = `
-    <iframe src="${embedUrl}" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-  `;
+  // === API呼び出しで再生（フォールバックあり） ===
+  if (apiReady && ytPlayer?.loadVideoById) {
+    ytPlayer.loadVideoById({
+      videoId,
+      startSeconds: startTime,
+      endSeconds: endTime,
+      suggestedQuality: "large"
+    });
+  } else {
+    const embedUrl = `https://www.youtube.com/embed/${videoId}?start=${startTime}&end=${endTime}&autoplay=1&rel=0`;
+    const container = document.querySelector(".player-wrapper");
+    container.innerHTML = `<iframe src="${embedUrl}" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+  }
 
+  // 共有URL
   const share = buildShareUrl(videoId, startTime);
   const shareCell = document.getElementById("shareUrl");
   if (shareCell) {
     shareCell.innerHTML = `
-    <a href="${share}" target="_blank" rel="noopener">${share}</a>
-    <button id="copyShareBtn">コピー</button>
-  `;
+      <a href="${share}" target="_blank" rel="noopener">${share}</a>
+      <button id="copyShareBtn">コピー</button>
+    `;
     const copyBtn = document.getElementById("copyShareBtn");
     if (copyBtn) copyBtn.onclick = () => copyToClipboard(share);
   }
 
+  // 情報欄
   document.getElementById("title").textContent = video.title;
   document.getElementById("date").textContent = video.date;
   document.getElementById("song").textContent = video.song;
@@ -119,9 +170,11 @@ function playRandom(retryCount = 0) {
   document.getElementById("duration").textContent = duration;
   document.getElementById("note").textContent = video.note;
 
+  // お気に入り連携
   window.__currentTrackId = makeTrackId({ url: video.url, start: startTime, duration });
   updateFavButton(window.__currentTrackId);
 
+  // 履歴
   addHistory({
     id: window.__currentTrackId,
     title: video.title,
@@ -134,18 +187,11 @@ function playRandom(retryCount = 0) {
     note: video.note
   });
 
-  autoNextTimer = setTimeout(() => playRandom(), duration * 1000);
+  // ENDイベントが来ない時のセーフティ
+  autoNextTimer = setTimeout(() => playRandom(), (duration + 2) * 1000);
 }
 
-function extractVideoId(url) {
-  const match =
-    url.match(/[?&]v=([^&]+)/) ||
-    url.match(/youtu\.be\/([^?&]+)/) ||
-    url.match(/\/live\/([^?&]+)/);
-  return match ? match[1] : "";
-}
-
-// 再生履歴
+/* ===== 再生履歴 ===== */
 function loadHistory() {
   return JSON.parse(localStorage.getItem("history") || "[]");
 }
@@ -153,7 +199,6 @@ function saveHistory(arr) {
   localStorage.setItem("history", JSON.stringify(arr));
 }
 function addHistory(entry) {
-  // 先頭追加→同一idは最新だけ残す→上限100
   let hist = loadHistory();
   hist.unshift({ ...entry, ts: Date.now() });
   const seen = new Set();
@@ -178,14 +223,13 @@ function renderHistory() {
     list.innerHTML = "<p>履歴はまだありません。</p>";
     return;
   }
-  // 表描画
   const table = document.createElement("table");
   const thead = table.createTHead().insertRow();
-  ["日付", "曲名", "アーティスト", "操作"].forEach(h => {
+  ["日付","曲名","アーティスト","操作"].forEach(h => {
     const th = document.createElement("th"); th.textContent = h; thead.appendChild(th);
   });
   const tbody = table.createTBody();
-  hist.forEach((h, i) => {
+  hist.forEach(h => {
     const tr = tbody.insertRow();
     tr.insertCell().textContent = h.date || "";
     tr.insertCell().textContent = h.song || "";
@@ -193,7 +237,7 @@ function renderHistory() {
     const ops = tr.insertCell();
     const playBtn = document.createElement("button");
     playBtn.textContent = "再生";
-    playBtn.onclick = () => playSpecific(h); // 下で定義
+    playBtn.onclick = () => playSpecific(h);
     const copyBtn = document.createElement("button");
     copyBtn.textContent = "URLコピー";
     copyBtn.onclick = () => copyToClipboard(buildShareUrl(extractVideoId(h.url), h.start));
@@ -204,7 +248,7 @@ function renderHistory() {
   list.appendChild(table);
 }
 
-// 無限再生ページで、履歴アイテムをそのまま1曲だけ再生
+/* 履歴から1曲だけ再生 → 終わったら通常に復帰 */
 function playSpecific(v) {
   if (!v || !v.url) return;
   if (autoNextTimer) clearTimeout(autoNextTimer);
@@ -214,10 +258,18 @@ function playSpecific(v) {
 
   const startTime = parseInt(v.start || 0);
   const duration = parseInt(v.duration || 30);
-  const embedUrl = `https://www.youtube.com/embed/${videoId}?start=${startTime}&autoplay=1`;
+  const endTime = startTime + duration;
 
-  const playerContainer = document.querySelector(".player-wrapper");
-  if (playerContainer) {
+  if (apiReady && ytPlayer?.loadVideoById) {
+    ytPlayer.loadVideoById({
+      videoId,
+      startSeconds: startTime,
+      endSeconds: endTime,
+      suggestedQuality: "large"
+    });
+  } else {
+    const embedUrl = `https://www.youtube.com/embed/${videoId}?start=${startTime}&end=${endTime}&autoplay=1&rel=0`;
+    const playerContainer = document.querySelector(".player-wrapper");
     playerContainer.innerHTML = `<iframe src="${embedUrl}" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
   }
 
@@ -245,6 +297,6 @@ function playSpecific(v) {
   window.__currentTrackId = makeTrackId({ url: v.url, start: startTime, duration });
   updateFavButton(window.__currentTrackId);
 
-  // 1曲再生後は通常の無限再生へ戻す（好みで変更OK）
+  // 1曲再生後は通常の無限再生へ戻す
   autoNextTimer = setTimeout(() => playRandom(), duration * 1000);
 }
