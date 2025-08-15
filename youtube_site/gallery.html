@@ -5,7 +5,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>サムネギャラリー | 眠雲ツクリ</title>
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="js/menu.js" defer></script>
     <style>
         /* 既存styles.cssに極力寄せつつ、ギャラリー用に軽く追記 */
         .gallery-container {
@@ -219,11 +220,11 @@
         </div>
     </div>
 
-    <script src="gallery.js"></script>
+    <script src="js/gallery.js"></script>
     <script>
         // 初期化：CSVの場所を指定（例：assets/thumbnails.csv）
         initGallery({
-            csvPath: 'assets/thumbnails.csv',   // ←あなたのCSVパスに変更
+            csvPath: 'csv/thumbnails.csv',   // ←あなたのCSVパスに変更
             // urlがYouTubeだったら、IDからサムネURLを作る。他プラットフォームはそのまま画像URLとして扱う
             urlToThumb: defaultUrlToThumb,      // カスタマイズ可能
             openLinkTarget: '_blank'            // 一覧クリック時のリンクターゲット
