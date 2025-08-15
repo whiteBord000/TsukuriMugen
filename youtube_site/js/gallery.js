@@ -7,7 +7,7 @@
 
 function initGallery(options) {
   const cfg = Object.assign({
-    csvPath: 'csv/thumbnails.csv',
+    csvPath: 'csv/thumbnail.csv',
     urlToThumb: defaultUrlToThumb,
     openLinkTarget: '_blank'
   }, options || {});
