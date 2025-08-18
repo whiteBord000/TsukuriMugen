@@ -82,6 +82,23 @@ function renderResults(results) {
     `;
     container.appendChild(div);
   });
+  if (!container.__wired) {
+    container.addEventListener("click", (e) => {
+      const play = e.target.closest(".play-btn");
+      if (play) {
+        const url = play.dataset.url;
+        const start = parseInt(play.dataset.start || "0", 10);
+        const duration = parseInt(play.dataset.duration || "30", 10);
+        playInline(url, start, duration);
+        return;
+      }
+      const fav = e.target.closest(".fav-btn");
+      if (fav) {
+        toggleFavoriteById(fav.dataset.id, fav);
+      }
+    });
+    container.__wired = true; // 二重登録防止
+  }
 }
 
 // プレイヤー
@@ -101,12 +118,11 @@ function playInline(url, start, duration) {
 // お気に入り機能
 function toggleFavoriteById(id, btnEl) {
   const set = new Set(JSON.parse(localStorage.getItem("favorites") || "[]"));
-  if (set.has(id)) {
-    set.delete(id);
-    if (btnEl) btnEl.textContent = "☆";
-  } else {
-    set.add(id);
-    if (btnEl) btnEl.textContent = "★";
-  }
+  const had = set.has(id);
+  if (had) set.delete(id); else set.add(id);
   localStorage.setItem("favorites", JSON.stringify([...set]));
+
+  if (btnEl) {
+    btnEl.textContent = had ? "☆ お気に入り" : "★（お気に入り）";
+  }
 }
