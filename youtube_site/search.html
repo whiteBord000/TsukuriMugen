@@ -1,41 +1,42 @@
 <!DOCTYPE html>
 <html lang="ja">
-
 <head>
-    <meta charset="UTF-8">
-    <title>楽曲検索</title>
-    <link rel="stylesheet" href="css/styles.css">
-    <script src="js/search.js" defer></script>
-    <script src="js/menu.js" defer></script>
+  <meta charset="UTF-8">
+  <title>楽曲検索</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="js/search.js" defer></script>
+  <script src="js/menu.js" defer></script>
+  <!-- NEW: ソート機能（search.js の後で） -->
+  <script src="js/sort.js" defer></script>
 </head>
-
 <body>
-    <nav>
-        <button id="menu-toggle">☰ メニュー</button>
-        <div id="menu" class="menu hidden">
-            <button onclick="location.href='index.html'">ようこそ</button>
-            <button onclick="location.href='mugen.html'">FMツクリ∞</button>
-            <button onclick="location.href='onePlay.html'">1配信再生</button>
-            <button onclick="location.href='setlist.html'">セットリスト一覧</button>
-            <button onclick="location.href='search.html'">楽曲検索</button>
-            <button onclick="location.href='favorites.html'">お気に入り</button>
-            <button onclick="location.href='wiki.html'">簡易Wiki</button>
-        </div>
-    </nav>
-    <h1>楽曲検索</h1>
-    <input type="text" id="searchInput" placeholder="曲名・アーティスト名・備考で検索" />
-    
-    <!-- ソート機能のUI -->
-    <div id="sortControls">
-        <label for="sortKey">並び替え:</label>
-        <select id="sortKey">
-            <option value="date">配信日</option>
-            <option value="song">曲名（50音順）</option>
-        </select>
-        <button id="sortOrderBtn" class="sort-order-btn" aria-pressed="true" title="昇順/降順切替"></button>
+  <nav>
+    <button id="menu-toggle">☰ メニュー</button>
+    <div id="menu" class="menu hidden">
+      <button onclick="location.href='index.html'">ようこそ</button>
+      <button onclick="location.href='mugen.html'">FMツクリ∞</button>
+      <button onclick="location.href='onePlay.html'">1配信再生</button>
+      <button onclick="location.href='setlist.html'">セットリスト一覧</button>
+      <button onclick="location.href='search.html'">楽曲検索</button>
+      <button onclick="location.href='favorites.html'">お気に入り</button>
+      <button onclick="location.href='wiki.html'">簡易Wiki</button>
     </div>
-    <script defer src="js/sort.js"></script>
-    <div id="searchResults"></div>
-</body>
+  </nav>
 
+  <h1>楽曲検索</h1>
+  <input type="text" id="searchInput" placeholder="曲名・アーティスト名・備考で検索" />
+
+  <!-- NEW: 並び替えUI（配信日なし） -->
+  <div class="toolbar sort-bar">
+    <label for="sortSelect">並び替え:</label>
+    <select id="sortSelect" class="sort-select">
+      <option value="song-asc">曲名（あ→ん）</option>
+      <option value="song-desc">曲名（ん→あ）</option>
+      <option value="artist-asc">アーティスト（あ→ん）</option>
+      <option value="artist-desc">アーティスト（ん→あ）</option>
+    </select>
+  </div>
+
+  <div id="searchResults"></div>
+</body>
 </html>

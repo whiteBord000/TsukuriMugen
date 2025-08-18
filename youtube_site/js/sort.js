@@ -1,59 +1,31 @@
 // js/sort.js
 (() => {
-  // 初期: 配信日時・降順（新しい順）
-  const sortState = { key: 'date', order: 'desc' };
+  // 初期：曲名（あ→ん）
+  let sortValue = 'song-asc';
 
-  function initSortUI() {
-    const keySel = document.getElementById('sortKey');
-    const orderBtn = document.getElementById('sortOrderBtn');
-    if (!keySel || !orderBtn) return;
-
-    keySel.value = sortState.key;
-    updateOrderBtn(orderBtn);
-
-    keySel.addEventListener('change', () => {
-      sortState.key = keySel.value;
-      rerenderWithSort();
-    });
-
-    orderBtn.addEventListener('click', () => {
-      sortState.order = (sortState.order === 'asc') ? 'desc' : 'asc';
-      updateOrderBtn(orderBtn);
-      rerenderWithSort();
-    });
+  function compareJa(a, b) {
+    return String(a || '').localeCompare(String(b || ''), 'ja', { sensitivity: 'base', numeric: true });
   }
 
-  function updateOrderBtn(btn) {
-    const asc = sortState.order === 'asc';
-    btn.setAttribute('aria-pressed', asc ? 'false' : 'true');
-    btn.textContent = asc ? '▲ 昇順' : '▼ 降順';
-  }
-
-  function normalizeDate(s) {
-    if (!s || typeof s !== 'string') return null;
-    const t = s.trim().replace(/[.]/g, '-').replace(/\//g, '-');
-    const d = new Date(t);
-    return isNaN(d.getTime()) ? null : d;
-  }
-
-  function sortResultsArray(items) {
+  function sortArray(items) {
     if (!Array.isArray(items)) return items;
-    const sign = (sortState.order === 'asc') ? 1 : -1;
+    const sorted = items.slice();
 
-    return items.slice().sort((a, b) => {
-      if (sortState.key === 'date') {
-        const da = normalizeDate(a.date || a.streamDate || a['配信日'] || '');
-        const db = normalizeDate(b.date || b.streamDate || b['配信日'] || '');
-        if (!da && !db) return 0;
-        if (!da) return 1;
-        if (!db) return -1;
-        return (da < db ? -1 : da > db ? 1 : 0) * sign;
-      } else {
-        const ta = (a.song || a.title || a['曲名'] || '').toString();
-        const tb = (b.song || b.title || b['曲名'] || '').toString();
-        return ta.localeCompare(tb, 'ja', { sensitivity: 'base', numeric: true }) * sign;
-      }
-    });
+    switch (sortValue) {
+      case 'song-asc':
+        sorted.sort((a, b) => compareJa(a.song, b.song));
+        break;
+      case 'song-desc':
+        sorted.sort((a, b) => compareJa(b.song, a.song));
+        break;
+      case 'artist-asc':
+        sorted.sort((a, b) => compareJa(a.artist, b.artist));
+        break;
+      case 'artist-desc':
+        sorted.sort((a, b) => compareJa(b.artist, a.artist));
+        break;
+    }
+    return sorted;
   }
 
   function wrapRenderResultsWhenReady() {
@@ -67,20 +39,30 @@
         window.renderResults = function(items) {
           try {
             window.lastSearchResults = Array.isArray(items) ? items.slice() : items;
-            originalRender.call(this, sortResultsArray(window.lastSearchResults));
+            originalRender.call(this, sortArray(window.lastSearchResults));
           } catch (e) {
             originalRender.call(this, items);
           }
         };
 
-        initSortUI();
+        initUI();
       } else if ((waited += INTERVAL) >= MAX_WAIT) {
         clearInterval(timer);
       }
     }, INTERVAL);
   }
 
-  function rerenderWithSort() {
+  function initUI() {
+    const sel = document.getElementById('sortSelect');
+    if (!sel) return;
+    sel.value = sortValue;
+    sel.addEventListener('change', () => {
+      sortValue = sel.value;
+      rerender();
+    });
+  }
+
+  function rerender() {
     if (typeof window.renderResults !== 'function') return;
     if (Array.isArray(window.lastSearchResults)) {
       window.renderResults(window.lastSearchResults);
@@ -90,11 +72,11 @@
     }
   }
 
+  // 公開（必要なら外から触れる）
   window.SortController = {
-    getState: () => ({ ...sortState }),
-    setKey: k => { sortState.key = k; rerenderWithSort(); },
-    setOrder: o => { sortState.order = o; rerenderWithSort(); },
-    rerender: rerenderWithSort
+    get: () => sortValue,
+    set: (v) => { sortValue = v; rerender(); },
+    rerender
   };
 
   document.addEventListener('DOMContentLoaded', wrapRenderResultsWhenReady);

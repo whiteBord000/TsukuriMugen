@@ -94,7 +94,7 @@ function renderResults(results) {
     const isFav = favs.has(song.id);
     const div = document.createElement("div");
     div.innerHTML = `
-      <p><strong>${song.song}</strong> - ${song.artist} (${song.date})</p>
+      <p><strong>${song.song}</strong> - ${song.artist}</p>
       <button class="play-btn"
               data-url="${song.url}"
               data-start="${song.start}"
