@@ -12,41 +12,18 @@ function makeTrackId({ url, start, duration }) {
 
 let allSongs = [];
 
-// 初期化・タグ付け
-let currentSortKey = "date";
-let currentSortOrder = "asc"; // asc or desc
+function applySort(results) {
+  const sortValue = document.getElementById("sortSelect")?.value || "song_asc";
+  return results.slice().sort((a, b) => {
+    if (sortValue === "song_asc") return a.song.localeCompare(b.song, "ja");
+    if (sortValue === "song_desc") return b.song.localeCompare(a.song, "ja");
+    if (sortValue === "artist_asc") return a.artist.localeCompare(b.artist, "ja");
+    if (sortValue === "artist_desc") return b.artist.localeCompare(a.artist, "ja");
+    return 0;
+  });
+}
 
-window.addEventListener("DOMContentLoaded", () => {
-  fetch("csv/All_Music.csv")
-    .then(res => res.text())
-    .then(text => {
-      const rows = text.trim().split("\n").slice(1);
-      allSongs = rows.map(row => {
-        const [title, date, url, song, artist, start, duration, note] = row.split(",");
-        const obj = { title, date, url, song, artist, start, duration, note };
-        obj.id = makeTrackId(obj);
-        return obj;
-      });
-
-      document.getElementById("searchInput").addEventListener("input", searchSongs);
-
-      // ソートイベント
-      document.getElementById("sortKey").addEventListener("change", e => {
-        currentSortKey = e.target.value;
-        searchSongs();
-      });
-      document.getElementById("sortAsc").addEventListener("click", () => {
-        currentSortOrder = "asc";
-        searchSongs();
-      });
-      document.getElementById("sortDesc").addEventListener("click", () => {
-        currentSortOrder = "desc";
-        searchSongs();
-      });
-    });
-});
-
-// 検索
+// 検索（キーワードフィルタ＋ソート）
 function searchSongs() {
   const keyword = document.getElementById("searchInput").value.trim().toLowerCase();
   let results = allSongs.filter(s =>
@@ -54,32 +31,32 @@ function searchSongs() {
     s.artist.toLowerCase().includes(keyword) ||
     (s.note && s.note.toLowerCase().includes(keyword))
   );
-
-  // 並び替え
-  results.sort((a, b) => {
-    let valA = a[currentSortKey];
-    let valB = b[currentSortKey];
-
-    if (currentSortKey === "date") {
-      // 日付比較
-      valA = new Date(valA);
-      valB = new Date(valB);
-    } else {
-      // 文字列比較（曲名）
-      valA = valA || "";
-      valB = valB || "";
-    }
-
-    if (valA < valB) return currentSortOrder === "asc" ? -1 : 1;
-    if (valA > valB) return currentSortOrder === "asc" ? 1 : -1;
-    return 0;
-  });
-
+  results = applySort(results);
   renderResults(results);
 }
 
+// 初期ロード
+window.addEventListener("DOMContentLoaded", () => {
+  fetch("csv/All_Music.csv")
+    .then(res => res.text())
+    .then(text => {
+      const rows = text.trim().split("\n").slice(1);
+      allSongs = rows.map(row => {
+        const [title, , url, song, artist, start, duration, note] = row.split(",");
+        const obj = { title, url, song, artist, start, duration, note };
+        obj.id = makeTrackId(obj);
+        return obj;
+      });
 
-// 再生ボタン化
+      document.getElementById("searchInput").addEventListener("input", searchSongs);
+      document.getElementById("sortSelect").addEventListener("change", searchSongs);
+
+      // デフォルトで一覧を表示
+      searchSongs();
+    });
+});
+
+// 結果描画
 function renderResults(results) {
   const favs = new Set(JSON.parse(localStorage.getItem("favorites") || "[]"));
   const container = document.getElementById("searchResults");
@@ -104,20 +81,6 @@ function renderResults(results) {
       </button>
     `;
     container.appendChild(div);
-  });
-
-  container.querySelectorAll(".play-btn").forEach(btn => {
-    btn.addEventListener("click", e => {
-      const url = e.currentTarget.dataset.url;
-      const start = parseInt(e.currentTarget.dataset.start || 0);
-      const duration = parseInt(e.currentTarget.dataset.duration || 30);
-      playInline(url, start, duration);
-    });
-  });
-  container.querySelectorAll(".fav-btn").forEach(btn => {
-    btn.addEventListener("click", e => {
-      toggleFavoriteById(e.currentTarget.dataset.id, e.currentTarget);
-    });
   });
 }
 
