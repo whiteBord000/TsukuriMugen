@@ -13,6 +13,9 @@ function makeTrackId({ url, start, duration }) {
 let allSongs = [];
 
 // 初期化・タグ付け
+let currentSortKey = "date";
+let currentSortOrder = "asc"; // asc or desc
+
 window.addEventListener("DOMContentLoaded", () => {
   fetch("csv/All_Music.csv")
     .then(res => res.text())
@@ -24,20 +27,57 @@ window.addEventListener("DOMContentLoaded", () => {
         obj.id = makeTrackId(obj);
         return obj;
       });
+
       document.getElementById("searchInput").addEventListener("input", searchSongs);
+
+      // ソートイベント
+      document.getElementById("sortKey").addEventListener("change", e => {
+        currentSortKey = e.target.value;
+        searchSongs();
+      });
+      document.getElementById("sortAsc").addEventListener("click", () => {
+        currentSortOrder = "asc";
+        searchSongs();
+      });
+      document.getElementById("sortDesc").addEventListener("click", () => {
+        currentSortOrder = "desc";
+        searchSongs();
+      });
     });
 });
 
 // 検索
 function searchSongs() {
   const keyword = document.getElementById("searchInput").value.trim().toLowerCase();
-  const results = allSongs.filter(s =>
+  let results = allSongs.filter(s =>
     s.song.toLowerCase().includes(keyword) ||
     s.artist.toLowerCase().includes(keyword) ||
     (s.note && s.note.toLowerCase().includes(keyword))
   );
+
+  // 並び替え
+  results.sort((a, b) => {
+    let valA = a[currentSortKey];
+    let valB = b[currentSortKey];
+
+    if (currentSortKey === "date") {
+      // 日付比較
+      valA = new Date(valA);
+      valB = new Date(valB);
+    } else {
+      // 文字列比較（曲名）
+      valA = valA || "";
+      valB = valB || "";
+    }
+
+    if (valA < valB) return currentSortOrder === "asc" ? -1 : 1;
+    if (valA > valB) return currentSortOrder === "asc" ? 1 : -1;
+    return 0;
+  });
+
   renderResults(results);
 }
+
 
 // 再生ボタン化
 function renderResults(results) {
