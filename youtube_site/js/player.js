@@ -58,7 +58,7 @@ function updateFavButton(id) {
 }
 
 /* ===== CSV読み込み ===== */
-fetch("csv/All_Music.csv")
+fetch("csv/Random_music.csv")
   .then(res => res.text())
   .then(text => {
     const rows = text.trim().split("\n").slice(1); // ヘッダー除外

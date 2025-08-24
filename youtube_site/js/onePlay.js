@@ -1,61 +1,65 @@
+// onePlay.js
+
 let currentIndex = 0;
 let songList = [];
 let playTimer = null;
 
-let csvFiles = [
-  { file: "csv/20250520.csv" },
-  { file: "csv/20250530.csv" },
-  { file: "csv/20250603.csv" },
-  { file: "csv/20250606a.csv" },
-  { file: "csv/20250606b.csv" },
-  { file: "csv/20250619.csv" },
-  { file: "csv/20250625.csv" },
-  { file: "csv/20250630.csv" },
-  { file: "csv/20250712.csv" },
-  { file: "csv/20250716.csv" },
-  { file: "csv/20250721.csv" },
-  { file: "csv/20250727.csv" },
-  { file: "csv/20250803.csv" },
-  { file: "csv/20250809.csv" }
-];
-
+// setlists.csv を読み込んで selector を作る
 window.addEventListener("DOMContentLoaded", () => {
   const selector = document.getElementById("csv-selector");
 
-  // 各CSVからタイトル取得してプルダウン作成
-  Promise.all(csvFiles.map(fileObj =>
-    fetch(fileObj.file)
-      .then(res => res.text())
-      .then(csvText => {
-        const firstLine = csvText.trim().split("\n")[1]; // ヘッダーの次の行（1曲目）
-        const [title] = firstLine.split(",");
-        const displayTitle1 = title.replace(/【.*?】/g, ""); // 【】内を除去
-        const displayTitle2 = displayTitle1.replace(/〖.*?〗/g, ""); // 【】内を除去
-        return { file: fileObj.file, title: displayTitle2.trim() };
-      })
-  )).then(filesWithTitles => {
-    filesWithTitles.forEach(csv => {
-      const option = document.createElement("option");
-      option.value = csv.file;
-      option.textContent = csv.title;
-      selector.appendChild(option);
-    });
+  fetch("csv/setlists.csv", { cache: "no-store" })
+    .then(res => res.text())
+    .then(text => {
+      const rows = text.trim().split("\n").slice(1);
+      const items = rows.map(line => {
+        const cols = parseCsvLine(line);
+        const [id, title, videoUrl, csv] = cols;
+        return { id, title, videoUrl, csv };
+      });
 
-    // 初期ロード
-    loadCsv(filesWithTitles[0].file);
-  });
+      items.forEach(item => {
+        const option = document.createElement("option");
+        option.value = "csv/" + item.csv;
+        // 見栄え用に飾りを落とす
+        const display = item.title.replace(/【.*?】/g, "").replace(/〖.*?〗/g, "").trim();
+        option.textContent = display || item.title;
+        selector.appendChild(option);
+      });
+
+      if (items.length) loadCsv("csv/" + items[0].csv);
+    });
 
   selector.addEventListener("change", () => {
     loadCsv(selector.value);
   });
 });
 
+function parseCsvLine(line) {
+  const out = []; let cur = ''; let inQ = false;
+  for (let i=0;i<line.length;i++) {
+    const c = line[i];
+    if (inQ) {
+      if (c === '"') {
+        if (line[i+1] === '"') { cur += '"'; i++; }
+        else { inQ = false; }
+      } else cur += c;
+    } else {
+      if (c === '"') inQ = true;
+      else if (c === ',') { out.push(cur); cur = ''; }
+      else cur += c;
+    }
+  }
+  out.push(cur);
+  return out.map(s => s.trim());
+}
+
 function loadCsv(file) {
   fetch(file)
     .then(response => response.text())
     .then(csvText => {
       currentIndex = 0;
-      const rows = csvText.trim().split("\n").slice(1); // ヘッダー除外
+      const rows = csvText.trim().split("\n").slice(1);
       songList = rows.map(line => {
         const [title, date, url, song, artist, start, duration, note] = line.split(",");
         const videoId = extractVideoId(url);
@@ -74,18 +78,15 @@ function extractVideoId(url) {
 
 function playSong(index) {
   if (index >= songList.length) return;
-
   if (playTimer) clearTimeout(playTimer);
 
   const song = songList[index];
   const end = song.startSeconds + song.duration;
   const embedUrl = `https://www.youtube.com/embed/${song.videoId}?start=${song.startSeconds}&end=${end}&autoplay=1`;
 
-  // 既存の.player-wrapperを取得してiframeだけ差し替える
   const wrapper = document.querySelector(".player-wrapper");
   wrapper.innerHTML = `<iframe src="${embedUrl}" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
 
-  // 曲情報更新
   const info = document.getElementById("info");
   info.innerHTML = `
     <strong>曲名:</strong> ${song.song}<br>
@@ -93,13 +94,11 @@ function playSong(index) {
     <strong>備考:</strong> ${song.note || "なし"}<br>
   `;
 
-  // 次曲タイマー
   playTimer = setTimeout(() => {
     currentIndex++;
     playSong(currentIndex);
   }, song.duration * 1000);
 }
-
 
 function nextSong() {
   if (currentIndex + 1 < songList.length) {
