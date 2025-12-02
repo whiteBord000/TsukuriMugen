@@ -21,6 +21,7 @@ let lastGroups = new Map();
 // （必要なら）最後に画面に出した結果も保持しておく
 let lastResults = [];
 
+// 並び替え
 function applySort(results) {
   const sortValue = document.getElementById("sortSelect")?.value || "song_asc";
   return results.slice().sort((a, b) => {
@@ -36,7 +37,7 @@ function applySort(results) {
 function searchSongs() {
   const keyword = document.getElementById("searchInput").value.trim().toLowerCase();
 
-  // ① キーワードでフィルタ
+  // ① キーワードでフィルタ（キーワード空なら実質 allSongs 全部）
   const filtered = allSongs.filter(s =>
     s.song.toLowerCase().includes(keyword) ||
     s.artist.toLowerCase().includes(keyword) ||
@@ -84,6 +85,7 @@ window.addEventListener("DOMContentLoaded", () => {
         return obj;
       });
 
+      // イベント設定
       document.getElementById("searchInput").addEventListener("input", searchSongs);
       document.getElementById("sortSelect").addEventListener("change", searchSongs);
 
@@ -95,6 +97,7 @@ window.addEventListener("DOMContentLoaded", () => {
         });
       }
 
+      // ポップアップ閉じるボタン
       const closeBtn = document.getElementById("songListClose");
       if (closeBtn) {
         closeBtn.addEventListener("click", () => {
@@ -103,8 +106,24 @@ window.addEventListener("DOMContentLoaded", () => {
         });
       }
 
-      // 初期表示をしたいならここで一度呼んでもOK
-      // searchSongs();
+      // ポップアップ内の再生ボタンのイベント（デリゲート）
+      const popup = document.getElementById("songListPopup");
+      if (popup && !popup.__wired) {
+        popup.addEventListener("click", (e) => {
+          const play = e.target.closest(".popup-play-btn");
+          if (play) {
+            const url = play.dataset.url;
+            const start = parseInt(play.dataset.start || "0", 10);
+            const duration = parseInt(play.dataset.duration || "30", 10);
+            playInline(url, start, duration);
+            return;
+          }
+        });
+        popup.__wired = true;
+      }
+
+      // ★ 初期表示：キーワード空の状態で全曲表示
+      searchSongs();
     });
 });
 
@@ -182,14 +201,12 @@ function openSongList(songName, artist) {
   const group = lastGroups.get(key) || [];
   if (!group.length) return;
 
-  // 同じタイトルが重複していたら1回にまとめる
-  const titles = Array.from(new Set(group.map(s => s.title)));
-
   const popup = document.getElementById("songListPopup");
   const content = document.getElementById("songListContent");
 
   // 念のため、要素がなかったときのフォールバックとして alert
   if (!popup || !content) {
+    const titles = Array.from(new Set(group.map(s => s.title)));
     const lines = titles.map(t => `・${t}`).join("\n");
     alert(`${songName} - ${artist}\n\nこの曲が出てくる配信:\n${lines}`);
     return;
@@ -198,11 +215,51 @@ function openSongList(songName, artist) {
   // ポップアップ中身を組み立て
   let html = `<h2>${songName} - ${artist}</h2>`;
   html += "<ul>";
-  for (const t of titles) {
-    html += `<li>${t}</li>`;
+
+  // 同じタイトルが重複していたらまとめつつ、その配信内の曲ごとの再生ボタンを出すイメージ
+  // （単純に group の1行ごとにボタン出す形でもOK）
+  for (const s of group) {
+    html += `
+      <li>
+        <span>${s.title}</span>
+        <button class="popup-play-btn"
+                data-url="${s.url}"
+                data-start="${s.start}"
+                data-duration="${s.duration}">
+          ▶ 再生
+        </button>
+      </li>
+    `;
   }
+
   html += "</ul>";
 
   content.innerHTML = html;
   popup.style.display = "block";
+}
+
+// プレイヤー
+function playInline(url, start, duration) {
+  const videoId = extractVideoId(url);
+  const embedUrl = `https://www.youtube.com/embed/${videoId}?start=${start}&autoplay=1`;
+  let wrapper = document.querySelector(".player-wrapper");
+  if (!wrapper) {
+    const mount = document.getElementById("searchResults");
+    wrapper = document.createElement("div");
+    wrapper.className = "player-wrapper";
+    mount.parentNode.insertBefore(wrapper, mount);
+  }
+  wrapper.innerHTML = `<iframe src="${embedUrl}" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+}
+
+// お気に入り機能
+function toggleFavoriteById(id, btnEl) {
+  const set = new Set(JSON.parse(localStorage.getItem("favorites") || "[]"));
+  const had = set.has(id);
+  if (had) set.delete(id); else set.add(id);
+  localStorage.setItem("favorites", JSON.stringify([...set]));
+
+  if (btnEl) {
+    btnEl.textContent = had ? "☆ お気に入り" : "★（お気に入り）";
+  }
 }
