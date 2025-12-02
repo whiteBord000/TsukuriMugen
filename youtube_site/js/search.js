@@ -95,6 +95,14 @@ window.addEventListener("DOMContentLoaded", () => {
         });
       }
 
+      const closeBtn = document.getElementById("songListClose");
+      if (closeBtn) {
+        closeBtn.addEventListener("click", () => {
+          const popup = document.getElementById("songListPopup");
+          if (popup) popup.style.display = "none";
+        });
+      }
+
       // 初期表示をしたいならここで一度呼んでもOK
       // searchSongs();
     });
@@ -168,7 +176,7 @@ function renderResults(results) {
   }
 }
 
-// 「リスト」ボタン押下時：その曲が出てくる動画タイトルを一覧表示
+// 「リスト」ボタン押下時：その曲が出てくる動画タイトルをポップアップ表示
 function openSongList(songName, artist) {
   const key = `${songName}__${artist}`;
   const group = lastGroups.get(key) || [];
@@ -176,33 +184,25 @@ function openSongList(songName, artist) {
 
   // 同じタイトルが重複していたら1回にまとめる
   const titles = Array.from(new Set(group.map(s => s.title)));
-  const lines = titles.map(t => `・${t}`).join("\n");
 
-  alert(`${songName} - ${artist}\n\nこの曲が出てくる配信:\n${lines}`);
-}
+  const popup = document.getElementById("songListPopup");
+  const content = document.getElementById("songListContent");
 
-// プレイヤー
-function playInline(url, start, duration) {
-  const videoId = extractVideoId(url);
-  const embedUrl = `https://www.youtube.com/embed/${videoId}?start=${start}&autoplay=1`;
-  let wrapper = document.querySelector(".player-wrapper");
-  if (!wrapper) {
-    const mount = document.getElementById("searchResults");
-    wrapper = document.createElement("div");
-    wrapper.className = "player-wrapper";
-    mount.parentNode.insertBefore(wrapper, mount);
+  // 念のため、要素がなかったときのフォールバックとして alert
+  if (!popup || !content) {
+    const lines = titles.map(t => `・${t}`).join("\n");
+    alert(`${songName} - ${artist}\n\nこの曲が出てくる配信:\n${lines}`);
+    return;
   }
-  wrapper.innerHTML = `<iframe src="${embedUrl}" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
-}
 
-// お気に入り機能
-function toggleFavoriteById(id, btnEl) {
-  const set = new Set(JSON.parse(localStorage.getItem("favorites") || "[]"));
-  const had = set.has(id);
-  if (had) set.delete(id); else set.add(id);
-  localStorage.setItem("favorites", JSON.stringify([...set]));
-
-  if (btnEl) {
-    btnEl.textContent = had ? "☆ お気に入り" : "★（お気に入り）";
+  // ポップアップ中身を組み立て
+  let html = `<h2>${songName} - ${artist}</h2>`;
+  html += "<ul>";
+  for (const t of titles) {
+    html += `<li>${t}</li>`;
   }
+  html += "</ul>";
+
+  content.innerHTML = html;
+  popup.style.display = "block";
 }
