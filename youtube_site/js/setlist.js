@@ -1,5 +1,3 @@
-// setlist.js
-
 /** お気に入りユーティリティ（現状のまま利用） **/
 function extractVideoId(url) {
   const m =
@@ -40,19 +38,58 @@ function youtubeThumbFromUrl(url) {
 let setlists = [];
 let lastClicked = null;
 
+// ★ 追加：歌ってみた用の配列
+let songMovies = [];
+
+// ★ 修正：両方の CSV を読む
 window.addEventListener("DOMContentLoaded", () => {
-  fetch("csv/setlists.csv", { cache: "no-store" })
-    .then(r => r.text())
-    .then(text => {
-      const rows = text.trim().split("\n").slice(1); // ヘッダ除外
-      setlists = rows.map(line => {
-        const cols = parseCsvLine(line);
-        const [id, title, videoUrl, csv] = cols;
-        return { id, title, videoUrl, csv };
-      });
-      renderThumbnails();
+  Promise.all([
+    fetch("csv/setlists.csv", { cache: "no-store" }).then(r => r.text()),
+    // song_movie.csv が無い/読めない場合も動くように try-catch 的に扱う
+    fetch("csv/song_movie.csv", { cache: "no-store" }).then(r => r.text()).catch(err => {
+      console.warn("song_movie.csv 読み込み失敗:", err);
+      return null;
     })
-    .catch(err => console.error("setlists.csv 読み込み失敗:", err));
+  ])
+    .then(([setlistText, songMovieText]) => {
+      // ▼ いつもの setlists.csv パース
+      if (setlistText) {
+        const rows = setlistText.trim().split("\n").slice(1); // ヘッダ除外
+        setlists = rows.map(line => {
+          const cols = parseCsvLine(line);
+          const [id, title, videoUrl, csv] = cols;
+          return { id, title, videoUrl, csv };
+        });
+        renderThumbnails();
+      }
+
+      // ▼ song_movie.csv 側の読み込み
+      if (songMovieText) {
+        const rows = songMovieText.trim().split("\n").slice(1); // ヘッダ除外
+        songMovies = rows.map(line => {
+          const cols = parseCsvLine(line);
+
+          // 想定： [id, title, url, ...] または [title, url] など
+          let title = "";
+          let videoUrl = "";
+
+          if (cols.length >= 3) {
+            title = cols[1];
+            videoUrl = cols[2];
+          } else if (cols.length >= 2) {
+            title = cols[0];
+            videoUrl = cols[1];
+          } else {
+            return null; // 不正行はスキップ
+          }
+
+          return { title, videoUrl };
+        }).filter(Boolean);
+
+        renderSongMovies();
+      }
+    })
+    .catch(err => console.error("CSV 読み込み失敗:", err));
 });
 
 function parseCsvLine(line) {
@@ -74,6 +111,34 @@ function parseCsvLine(line) {
   return out.map(s => s.trim());
 }
 
+/** ▼ 新規：song_movie.csv を「歌ってみた一覧」に描画 */
+function renderSongMovies() {
+  const container = document.getElementById("songmovie-container");
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  if (!songMovies.length) {
+    container.innerHTML = "<p>歌ってみたデータがありません。</p>";
+    return;
+  }
+
+  songMovies.forEach(item => {
+    const img = document.createElement("img");
+    img.src = youtubeThumbFromUrl(item.videoUrl);
+    img.className = "thumbnail";
+    img.alt = item.title;
+
+    // クリックで動画ページを新規タブで開く
+    img.addEventListener("click", () => {
+      window.open(item.videoUrl, "_blank");
+    });
+
+    container.appendChild(img);
+  });
+}
+
+/** ▼ 既存：セットリストのサムネ描画（ほぼそのまま） */
 function renderThumbnails() {
   const container = document.getElementById("thumbnail-container");
   container.innerHTML = "";
