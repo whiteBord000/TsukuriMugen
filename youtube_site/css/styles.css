@@ -302,64 +302,58 @@ a:hover {
   height: 20px;
 }
 
+/* 楽曲検索：読みやすい2段レイアウト */
 .search-result-row {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: flex-start;
-  gap: 0.75rem;
-  padding: 4px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+  padding: 6px 0 10px;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  max-width: 720px;
 }
 
+/* 左：曲情報（上下2段） */
 .search-main {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  width: 240px;
-  line-height: 1.1;
+  gap: 2px; /* ← ほんの少し余裕を持たせる */
+  width: 60%;  /* 曲情報スペース */
+  min-width: 0;
 }
 
-/* 曲名（1行固定・省略） */
+/* 曲名（主役） */
 .search-title {
-  font-weight: bold;
+  font-weight: 700;
+  font-size: 1rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-size: 0.95em;
-  margin: 0;
-  padding: 0;
 }
 
-/* アーティスト名（1行固定・省略） */
+/* アーティスト（脇役・控えめ） */
 .search-artist-line {
+  font-size: 0.85rem;
+  color: rgba(0,0,0,0.6); /* ★ 曲名より目立たなくする */
+  padding-left: 0.5rem;  /* ★ 階層関係を視覚でつける */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-size: 0.75em;
-  opacity: 0.85;
-  margin: 0;
-  padding: 0;
 }
 
-/* ボタン部分 */
+/* 右：ボタン群 */
 .search-actions {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem;
+  gap: 0.35rem;
   flex-shrink: 0;
 }
 
-/* 検索結果専用：コンパクトボタン */
+/* ボタンを控えめに */
 .search-actions button {
   padding: 4px 10px;
+  font-size: 0.8rem;
   margin: 0;
-  font-size: 0.8em;
-  line-height: 1;
+  opacity: 0.95;
 }
-
-/* スマホでも2段タイトルは維持（折り返し禁止） */
-@media (max-width: 600px) {
-  .search-main {
-    width: 100%;
-  }
+.search-actions button:hover {
+  opacity: 1;
 }
