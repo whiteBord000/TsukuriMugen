@@ -301,3 +301,38 @@ a:hover {
 .spacer {
   height: 20px;
 }
+
+/* 楽曲検索：1行レイアウト */
+.search-result-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08); /* お好みで */
+}
+
+.search-main {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem;
+  flex: 1; /* 余った幅をここが受ける */
+  min-width: 0; /* 長いタイトルでのはみ出し対策 */
+}
+
+.search-song {
+  font-weight: bold;
+}
+
+.search-artist {
+  font-size: 0.9em;
+  opacity: 0.8;
+}
+
+.search-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  flex-shrink: 0; /* ボタンはつぶれないように */
+}

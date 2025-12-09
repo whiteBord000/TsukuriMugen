@@ -146,24 +146,31 @@ function renderResults(results) {
     const hasMulti = group.length > 1; // 同じ曲が複数配信にあるか
 
     const div = document.createElement("div");
-    div.innerHTML = `
-      <p><strong>${song.song}</strong> - ${song.artist}</p>
-      <button class="play-btn"
-              data-url="${song.url}"
-              data-start="${song.start}"
-              data-duration="${song.duration}">▶ 再生</button>
-      <button class="fav-btn" data-id="${song.id}">
-        ${isFav ? "★（お気に入り）" : "☆ お気に入り"}
+div.className = "search-result-row";  // ★ 追加クラス
+
+div.innerHTML = `
+  <div class="search-main">
+    <span class="search-song">${song.song}</span>
+    <span class="search-artist">- ${song.artist}</span>
+  </div>
+  <div class="search-actions">
+    <button class="play-btn"
+            data-url="${song.url}"
+            data-start="${song.start}"
+            data-duration="${song.duration}">▶ 再生</button>
+    <button class="fav-btn" data-id="${song.id}">
+      ${isFav ? "★（お気に入り）" : "☆ お気に入り"}
+    </button>
+    ${hasMulti ? `
+      <button class="list-btn"
+              data-song="${song.song}"
+              data-artist="${song.artist}">
+        リスト
       </button>
-      ${hasMulti ? `
-        <button class="list-btn"
-                data-song="${song.song}"
-                data-artist="${song.artist}">
-          リスト
-        </button>
-      ` : ""}
-    `;
-    container.appendChild(div);
+    ` : ""}
+  </div>
+`;
+container.appendChild(div);
   });
 
   if (!container.__wired) {
