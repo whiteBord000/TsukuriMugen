@@ -357,3 +357,56 @@ a:hover {
 .search-actions button:hover {
   opacity: 1;
 }
+
+/* 楽曲検索：1レコード（1曲）の構造をはっきりさせる */
+.search-result-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 0 10px;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+/* 左ブロックを“1つの箱”として扱う */
+.search-main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  width: 300px;     /* ★ 横幅を固定すると可読性が激増する */
+  min-width: 0;
+}
+
+/* 曲名をタイトルとして強調 */
+.search-title {
+  font-weight: 600;
+  font-size: 1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* アーティストは控えめにして階層化 */
+.search-artist-line {
+  font-size: 0.8rem;
+  color: rgba(0,0,0,0.6);
+  padding-left: 0.5rem; /* 階層のためのインデント */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 右側：操作ボタン群 */
+.search-actions {
+  display: flex;
+  gap: 0.35rem;
+  flex-shrink: 0;
+}
+
+.search-actions button {
+  padding: 4px 10px;
+  margin: 0;
+  font-size: 0.8rem;
+}
