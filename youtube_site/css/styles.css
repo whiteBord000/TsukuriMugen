@@ -398,15 +398,26 @@ a:hover {
   text-overflow: ellipsis;
 }
 
-/* 右側：操作ボタン群 */
+/* 楽曲検索：ボタン3列の位置を固定 */
 .search-actions {
-  display: flex;
-  gap: 0.35rem;
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: auto auto auto; /* 再生 / お気に入り / リスト */
+  column-gap: 0.35rem;
   flex-shrink: 0;
 }
 
+/* ボタン幅を揃える（文字数が違っても列位置がズレないように） */
 .search-actions button {
   padding: 4px 10px;
   margin: 0;
   font-size: 0.8rem;
+  min-width: 5.5em;
+  text-align: center;
+}
+
+/* リスト無し行用：場所だけ取って見えない＆クリックできない */
+.list-btn--hidden {
+  visibility: hidden;      /* 枠だけ確保して見せない */
+  pointer-events: none;    /* クリック不可 */
 }

@@ -146,12 +146,14 @@ function renderResults(results) {
     const hasMulti = group.length > 1; // 同じ曲が複数配信にあるか
 
     const div = document.createElement("div");
-div.className = "search-result-row";  // ★ 追加クラス
+    div.className = "search-result-row";
 
-div.innerHTML = `
+    const listBtnClass = hasMulti ? "list-btn" : "list-btn list-btn--hidden";
+
+    div.innerHTML = `
   <div class="search-main">
-    <span class="search-song">${song.song}</span>
-    <span class="search-artist">- ${song.artist}</span>
+    <span class="search-title">${song.song}</span>
+    <span class="search-artist-line">${song.artist}</span>
   </div>
   <div class="search-actions">
     <button class="play-btn"
@@ -161,16 +163,16 @@ div.innerHTML = `
     <button class="fav-btn" data-id="${song.id}">
       ${isFav ? "★（お気に入り）" : "☆ お気に入り"}
     </button>
-    ${hasMulti ? `
-      <button class="list-btn"
-              data-song="${song.song}"
-              data-artist="${song.artist}">
-        リスト
-      </button>
-    ` : ""}
+    <button class="${listBtnClass}"
+            data-song="${song.song}"
+            data-artist="${song.artist}"
+            ${hasMulti ? "" : "disabled"}>
+      リスト
+    </button>
   </div>
 `;
-container.appendChild(div);
+
+    container.appendChild(div);
   });
 
   if (!container.__wired) {
