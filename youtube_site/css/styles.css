@@ -14,6 +14,38 @@
   --accent-color: rgb(252, 255, 247);
 }
 
+/* テキスト（共通） */
+#info,
+#wiki,
+body > p,
+body > h1,
+body > h2,
+body > h3 {
+  max-width: 40em;
+  margin-right: auto;
+  margin-left: auto;
+  text-align: left;
+}
+
+/* wikiの見出しだけ中央寄せ */
+#wiki h1,
+#wiki h2,
+#wiki h3 {
+  text-align: center;
+}
+
+/* PCサイズになったら横幅を広げる */
+@media (min-width: 1024px) {
+  #info,
+  #wiki,
+  body > p,
+  body > h1,
+  body > h2,
+  body > h3 {
+    max-width: 60em;          /* だいたい 960px */
+  }
+}
+
 /* デフォルト設定 */
 body {
   margin: 0;
