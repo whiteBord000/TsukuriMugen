@@ -1,196 +1,451 @@
-/* -----------------------------
-   カラーパレット
------------------------------ */
+/* カラーパレット */
 :root {
-  --bg-color: #f8fff8;
-  --bg-gradient-top: #d6e4ff;
-  --bg-gradient-bottom: #fff0f8;
-
-  --accent-color: #ffd1dc;
-  --highlight-color: #ffb3c6;
-  --text-color: #4a4a4a;
-  --subtext-color: #777;
-
-  --nav-bg-color: #ffeef8;
-  --nav-border-color: #ffd8ec;
-  --button-bg-color: #ffd1dc;
-  --button-hover-bg-color: #ffb3c6;
+  /* 文字色（パープル系） */
+  --text-color: rgb(122, 105, 185);
+  /* 背景（ライトブルー） */
+  --background-hedder-color: rgb(155, 188, 230);
+  /* ボタン（薄めの水色） */
+  --button-color-green: rgb(195, 227, 227);
+  /* ボタン(ピンク) */
+  --button-color: rgb(225, 170, 240);
+  /* 背景（淡いピンク） */
+  --background-color: rgb(255, 240, 245);
+  /* アクセント（薄いクリーム） */
+  --accent-color: rgb(252, 255, 247);
 }
 
+/* デフォルト設定 */
 body {
   margin: 0;
-  padding: 0;
-  font-family: "Helvetica", "Arial", "Yu Gothic", sans-serif;
+  font-family: 'Helvetica Neue', 'Noto Sans JP', sans-serif;
   color: var(--text-color);
   background: linear-gradient(
-    to bottom right,
-    var(--bg-gradient-top),
-    var(--bg-gradient-bottom)
+    135deg,
+    var(--accent-color) 20%,
+    #ffffff 50%,
+    var(--background-color) 100%
   );
-  background-attachment: fixed;
-  line-height: 1.7;
   min-height: 100vh;
-}
-
-/* PC向け：テキスト横幅制御
-
-/* ★ pタグは制限せず、ページ全体ブロックに幅を与える方式へ変更 */
-.page-container,
-#wiki,
-#info {
-  max-width: 42em;
-  margin-left: auto;
-  margin-right: auto;
-  padding: 0 1rem;
-}
-
-/* PC時は広げる */
-@media (min-width: 1024px) {
-  .page-container,
-  #wiki,
-  #info {
-    max-width: 60em;  /* PC幅を調整 */
-  }
-}
-
-/* 見出しは中央寄せ */
-h1, h2, h3 {
-  text-align: center;
-  margin-top: 1.6rem;
-  margin-bottom: 1rem;
-  color: #6454a8;
-}
-
-nav {
-  background: var(--nav-bg-color);
-  border-bottom: 1px solid var(--nav-border-color);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  padding: 8px;
-  display: flex;
-  justify-content: center;
-}
-
-nav button {
-  margin: 4px;
-  padding: 8px 12px;
-  font-size: 0.9rem;
-  border-radius: 999px;
-  border: 1px solid var(--nav-border-color);
-  background: var(--button-bg-color);
-  cursor: pointer;
-  transition: 0.2s ease;
-}
-
-nav button:hover {
-  background: var(--button-hover-bg-color);
-}
-
-/* ハンバーガーメニュー */
-.menu {
-  display: none;
-}
-
-.menu.show {
   display: flex;
   flex-direction: column;
-  background: var(--nav-bg-color);
+  align-items: center;
+}
+
+
+h1,
+h2,
+h3 {
+  color: var(--text-color);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+p {
+  margin: 8px 0;
+}
+
+/* ナビバー */
+nav {
+  width: 100%;
+  background: linear-gradient(
+    90deg,
+    var(--background-hedder-color) 0%,
+    #ffffff 30%,
+    var(--accent-color) 100% 
+  );
   padding: 10px;
-  border-radius: 10px;
-  border: 1px solid var(--nav-border-color);
-  margin-top: 6px;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-/* PCではメニューを水平並びに */
-@media (min-width: 1024px) {
-  #menu-toggle {
-    display: none;
-  }
-  .menu {
-    display: flex !important;
-    flex-direction: row;
-    gap: 6px;
-    background: none;
-    border: none;
-    padding: 0;
-  }
-}
-
-/* ボタン共通 */
-  
-button {
-  font-family: inherit;
-  border-radius: 10px;
+nav .menu button {
+  background: var(--button-color-green);
+  color: var(--text-color);
+  border: none;
+  padding: 8px 14px;
+  margin: 4px;
+  border-radius: 6px;
+  font-weight: bold;
   cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+nav .menu button:hover {
+  background: var(--accent-color);
+  transform: translateY(-2px);
+}
+
+/* ボタン */
+button {
+  background: linear-gradient(90deg, var(--button-color), var(--accent-color));
+  color: var(--text-color);
+  border: none;
+  padding: 10px 18px;
+  margin: 12px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background: var(--accent-color);
+  transform: translateY(-2px);
 }
 
 /* プレイヤー */
-
 .player-wrapper {
+  position: relative;
   width: 100%;
-  max-width: 900px; /* PCで広く見せる */
-  margin: 1.5rem auto;
-  background: #ffffffaa;
-  padding: 10px;
-  border-radius: 12px;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+  max-width: 560px;    /* デスクトップ時の最大幅 */
+  aspect-ratio: 16 / 9; /* アスペクト比維持 */
+  margin: 20px auto;
 }
 
 .player-wrapper iframe {
+  position: absolute;
   width: 100%;
-  height: 58vh; /* PCだと高さ伸ばす */
-  border-radius: 12px;
-  border: none;
+  height: 100%;
+  border: 4px solid var(--button-color);
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  top: 0;
+  left: 0;
 }
 
-/* 検索結果 / テーブル */
 
-.table-container {
-  max-width: 60em;
+/* インフォボックス */
+#info {
+  background: rgba(255, 255, 255, 0.8);
+  border: 2px solid var(--button-color);
+  border-radius: 12px;
+  padding: 20px;
+  margin: 20px;
+  max-width: 600px;
+  text-align: left;
+  backdrop-filter: blur(5px);
+}
+
+/* テキスト */
+/* テキストボックス共通設定 */
+#info, p, h1, h2, h3 {
+  max-width: 40em;
+  margin-right: auto;
+  margin-left: auto;
+  text-align: left;
+}
+
+/* wiki系テキスト*/
+#wiki, p {
+  max-width: 30em;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: left;
+}
+
+#wiki h1,
+#wiki h2,
+#wiki h3 {
+  text-align: center;
+}
+
+
+/* セットリスト・ポップアップ */
+.popup {
+  position: fixed;
+  top: 10%;
+  left: 10%;
+  width: 80%;
+  height: 70%;
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid var(--button-color);
+  border-radius: 10px;
+  overflow: auto;
+  padding: 20px;
+  display: none;
+  z-index: 10;
+  backdrop-filter: blur(5px);
+}
+
+.popup table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.popup th,
+.popup td {
+  border: 1px solid var(--button-color);
+  padding: 8px;
+}
+
+/* サムネ */
+.thumbnail {
+  width: 200px;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  margin: 10px;
+  cursor: pointer;
+}
+
+.popup-thumbnail {
+  width: 100%;
+  max-width: 480px;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  display: block;
+  margin-bottom: 1em;
+  cursor: pointer;
+}
+
+a {
+  color: var(--text-color);
+  text-decoration: underline;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--button-color);
+}
+
+#info {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  row-gap: 0.3em;
+  column-gap: 1em;
+}
+
+#info p {
+  display: contents;
+}
+
+#info strong {
+  text-align: right;
+  font-weight: bold;
+}
+
+#info span {
+  text-align: left;
+  display: inline-block;
+  word-break: break-word;
+}
+
+#info th {
+  text-align: right;
+  padding: 6px 12px;
+  white-space: nowrap;
+  vertical-align: top;
+  color: var(--text-color);
+}
+
+#info td {
+  text-align: left;
+  padding: 6px 0;
+  color: var(--text-color);
+  word-break: break-word;
+}
+
+/* ハンバーガーメニュー */
+#menu-toggle {
+  background: var(--button-color);
+  color: var(--text-color);
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.menu {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+}
+
+.menu.hidden {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  #menu {
+    display: flex !important;
+  }
+
+  #menu-toggle {
+    display: none;
+  }
+}
+
+/* 並び替えUI */
+.sort-bar {
+  display: flex;
+  gap: .5rem;
+  align-items: center;
+  margin: .5rem 0 1rem;
+  flex-wrap: wrap;
+}
+.sort-select {
+  padding: .4rem .6rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background: #fff;
+}
+.toolbar {
+  background: var(--surface, #fff);
+  border: 1px solid rgba(0,0,0,.06);
+  border-radius: 12px;
+  padding: .5rem .75rem;
+  box-shadow: 0 1px 2px rgba(0,0,0,.04);
+}
+
+.spacer {
+  height: 20px;
+}
+
+/* 楽曲検索：読みやすい2段レイアウト */
+.search-result-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0 10px;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  max-width: 720px;
+}
+
+/* 左：曲情報（上下2段） */
+.search-main {
+  display: flex;
+  flex-direction: column;
+  gap: 2px; /* ← ほんの少し余裕を持たせる */
+  width: 60%;  /* 曲情報スペース */
+  min-width: 0;
+}
+
+/* 曲名（主役） */
+.search-title {
+  font-weight: 700;
+  font-size: 1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* アーティスト（脇役・控えめ） */
+.search-artist-line {
+  font-size: 0.85rem;
+  color: rgba(0,0,0,0.6); /* ★ 曲名より目立たなくする */
+  padding-left: 0.5rem;  /* ★ 階層関係を視覚でつける */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 右：ボタン群 */
+.search-actions {
+  display: flex;
+  gap: 0.35rem;
+  flex-shrink: 0;
+}
+
+/* ボタンを控えめに */
+.search-actions button {
+  padding: 4px 10px;
+  font-size: 0.8rem;
+  margin: 0;
+  opacity: 0.95;
+}
+.search-actions button:hover {
+  opacity: 1;
+}
+
+/* 楽曲検索：1レコード（1曲）の構造をはっきりさせる */
+.search-result-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 0 10px;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+  max-width: 720px;
   margin: 0 auto;
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 1rem 0;
-  background: #ffffffcc;
-  border-radius: 10px;
+/* 左ブロックを“1つの箱”として扱う */
+.search-main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  width: 300px;     /* 横幅を固定して可読性を上げる */
+  min-width: 0;
+}
+
+/* 曲名をタイトルとして強調 */
+.search-title {
+  font-weight: 600;
+  font-size: 1rem;
+  white-space: nowrap;
   overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-th, td {
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
+/* アーティストは控えめにして階層化 */
+.search-artist-line {
+  font-size: 0.8rem;
+  color: rgba(0,0,0,0.6);
+  padding-left: 0.5rem; /* 階層のためのインデント */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-th {
-  background: #ffe3f4;
+/* 楽曲検索：ボタン3列の位置を固定 */
+.search-actions {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: auto auto auto; /* 再生 / お気に入り / リスト */
+  column-gap: 0.35rem;
+  flex-shrink: 0;
 }
 
-tr:hover {
-  background: #fff7fb;
-}
-
-/* ギャラリー・サムネイル */
-
-.thumbnail {
-  width: 100%;
-  max-width: 260px;
-  border-radius: 14px;
-  box-shadow: 0 2px 7px rgba(0, 0, 0, 0.15);
-  transition: transform 0.15s;
-}
-
-.thumbnail:hover {
-  transform: scale(1.03);
-}
-
-/* footer */
-
-footer {
+/* ボタン幅を揃える（文字数が違っても列位置がズレないように） */
+.search-actions button {
+  padding: 4px 10px;
+  margin: 0;
+  font-size: 0.8rem;
+  min-width: 5.5em;
   text-align: center;
-  padding: 2rem 0;
-  color: var(--subtext-color);
+}
+
+/* リスト無し行用：場所だけ取って見えない＆クリックできない */
+.list-btn--hidden {
+  visibility: hidden;      /* 枠だけ確保して見せない */
+  pointer-events: none;    /* クリック不可 */
+}
+
+/* p を max-width の対象から除外（ここが最重要） */
+#info, h1, h2, h3 {
+  max-width: 40em;
+  margin-right: auto;
+  margin-left: auto;
+  text-align: left;
+}
+
+/* wiki 本文ブロックはコンテナとして扱う */
+#wiki {
+  max-width: 40em;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* 見出しは文脈によって中央揃え */
+#wiki h1, #wiki h2, #wiki h3 {
+  text-align: center;
+}
+
+/* ★ PC画面では少し広げる（必要最小限のメディアクエリ） */
+@media (min-width: 1024px) {
+  #info,
+  #wiki {
+    max-width: 60em;  /* ← PCでの最大横幅。好みで調整可能 */
+  }
 }
