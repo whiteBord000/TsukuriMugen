@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>眠雲ツクリ FM∞ PCビュー</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- 共通CSS（パステルデザイン） -->
+  <link rel="stylesheet" href="css/styles.css">
+
+  <style>
+    .desktop-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 8px;
+      box-sizing: border-box;
+      height: calc(100vh - 70px);
+    }
+
+    .desktop-pane {
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    .desktop-pane-header {
+      padding: 6px 10px;
+      font-size: 0.9rem;
+      font-weight: bold;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+      background: rgba(255, 255, 255, 0.8);
+    }
+
+    .desktop-pane iframe {
+      border: none;
+      flex: 1;
+      width: 100%;
+    }
+
+    .desktop-tabs {
+      display: flex;
+      gap: 4px;
+      padding: 6px 8px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+      background: rgba(255, 255, 255, 0.8);
+    }
+
+    .desktop-tabs button {
+      margin: 0;
+      padding: 4px 10px;
+      font-size: 0.8rem;
+      border-radius: 999px;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      background: rgba(255, 255, 255, 0.9);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .desktop-tabs button.active {
+      background: #ffeaf7;
+      border-color: #ffb8dd;
+      font-weight: bold;
+    }
+
+    .desktop-only-message {
+      display: none;
+      padding: 12px;
+      text-align: center;
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    @media (max-width: 767px) {
+      .desktop-layout {
+        display: none;
+      }
+      .desktop-only-message {
+        display: block;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ナビゲーション -->
+  <nav>
+    <button id="menu-toggle">☰ メニュー</button>
+    <div id="menu" class="menu hidden">
+      <button onclick="location.href='index.html'">ホーム</button>
+      <button onclick="location.href='mugen.html'">FMツクリ∞</button>
+      <button onclick="location.href='setlist.html'">セットリスト</button>
+      <button onclick="location.href='search.html'">検索</button>
+      <button onclick="location.href='favorites.html'">お気に入り</button>
+      <button onclick="location.href='wiki.html'">Wiki</button>
+      <button onclick="location.href='desktop.html'">PCビュー</button>
+    </div>
+  </nav>
+  <script src="js/menu.js" defer></script>
+
+  <p class="desktop-only-message">
+    このページはPC向けレイアウトです 🖥<br>
+    スマホの方はメニューから各ページをご利用ください。
+  </p>
+
+  <!-- PC向け2ペイン -->
+  <main class="desktop-layout">
+
+    <section class="desktop-pane">
+      <div class="desktop-pane-header">FMツクリ∞（ランダム再生）</div>
+      <iframe src="mugen.html" title="FMツクリ∞"></iframe>
+    </section>
+
+    <section class="desktop-pane">
+      <div class="desktop-tabs" id="desktop-tabs">
+        <button type="button" data-page="setlist.html" class="active">セットリスト</button>
+        <button type="button" data-page="search.html">検索</button>
+        <button type="button" data-page="favorites.html">お気に入り</button>
+        <button type="button" data-page="wiki.html">Wiki</button>
+      </div>
+      <iframe id="rightFrame" src="setlist.html" title="眠雲ツクリツール"></iframe>
+    </section>
+
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const frame = document.getElementById('rightFrame');
+      const tabs = document.querySelectorAll('#desktop-tabs button');
+
+      tabs.forEach(btn => {
+        btn.addEventListener('click', () => {
+          frame.src = btn.dataset.page;
+          tabs.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+        });
+      });
+    });
+  </script>
+
+</body>
+</html>
